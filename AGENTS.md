@@ -53,5 +53,8 @@ When making changes:
 2. Explain the design choice
 3. Explain how to run
 4. Mark unknown external integrations as TODO or MOCK
-5. After code is verified locally, check all 6 repositories and push every repository that actually has changes to its remote
-6. Do not create empty commits for repositories with no changes
+5. If code, logic, interfaces, configuration, architecture, or runtime behavior changes, update the affected documentation in the same turn
+6. At minimum, update the impacted module README; if the change affects shared architecture, shared workflow, shared data model, deployment, or workspace conventions, also update documentation in `rigel-core`
+7. Documentation is part of the delivery; code changes are not complete until the relevant documentation is aligned
+8. After code is verified locally, check all 6 repositories and push every repository that actually has changes to its remote
+9. Do not create empty commits for repositories with no changes
