@@ -83,6 +83,20 @@ Current implementation work is being re-aligned toward:
 
 Heavier compatibility/scoring logic and larger admin surfaces are secondary to this core flow.
 
+## Strong Constraints
+
+The following rules are hard constraints for this workspace:
+
+1. `rigel-core` is the shared source of truth for workspace-level docs, constraints, Compose files, and bootstrap SQL.
+2. Every module repository must follow [AGENTS.md](/Users/mac-mini/work/private/rigel/rigel-core/AGENTS.md) in `rigel-core` before applying local conventions.
+3. If code, logic, interfaces, configuration, architecture, or runtime behavior changes, the affected documentation must be updated in the same turn.
+4. At minimum, update the impacted module README. If the change affects shared architecture, shared workflow, shared data model, deployment, or workspace conventions, also update `rigel-core`.
+5. Documentation is part of delivery. A code change is not considered complete until the relevant docs are aligned.
+6. After local verification, every repository that actually changed must be committed and pushed to its remote. Do not create empty commits.
+7. Backend services should use Go whenever practical. `rigel-jd-collector` must use Go. `rigel-goofish-collector` may retain upstream-required Python components, but must expose clean boundaries.
+8. External platform integrations must stay behind local clients or adapters. Unverified third-party capabilities must be marked `TODO` or `MOCK`.
+9. Current product focus is `daily price collection -> canonical model normalization -> aggregated price catalog -> AI recommendation`. Work that does not support this flow is secondary.
+
 ## How To Start
 
 1. Enter `rigel-core`.
