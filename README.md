@@ -11,11 +11,10 @@ All core docs and shared operational files now live in this repository.
 The project is now centered on one short pipeline:
 
 1. collect JD prices once per day
-2. collect Goofish prices once per day
-3. normalize raw product titles into canonical part models
-4. aggregate daily prices per canonical model
-5. send `budget + use case + current price catalog` to AI
-6. return a readable build recommendation
+2. normalize raw product titles into canonical part models
+3. aggregate daily prices per canonical model
+4. send `budget + use case + current price catalog` to AI
+5. return a readable build recommendation
 
 The main product output is not a crawler dashboard and not a heavy rule engine.
 The main product output is a daily usable part-price catalog that AI can consume.
@@ -39,7 +38,6 @@ rigel/
 ├── rigel-ai-advisor/
 ├── rigel-build-engine/
 ├── rigel-console/
-├── rigel-goofish-collector/
 ├── rigel-jd-browser-collector/
 └── rigel-jd-collector/
 ```
@@ -48,7 +46,6 @@ rigel/
 
 - `rigel-jd-collector`: collect JD raw product samples and daily price snapshots.
 - `rigel-jd-browser-collector`: optional browser worker used when JD official API access is unavailable.
-- `rigel-goofish-collector`: collect Goofish raw product samples and market-reference data, while preserving login-state capability.
 - `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, and keep only minimal hard compatibility checks.
 - `rigel-ai-advisor`: consume `budget + use case + aggregated part catalog` and generate recommendation text.
 - `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
@@ -75,7 +72,7 @@ That catalog is what later gets sent to AI together with user intent such as `60
 
 Current implementation work is being re-aligned toward:
 
-- daily price collection
+- daily JD price collection
 - canonical model normalization
 - per-model daily aggregation
 - AI-first recommendation output
@@ -93,7 +90,7 @@ The following rules are hard constraints for this workspace:
 4. At minimum, update the impacted module README. If the change affects shared architecture, shared workflow, shared data model, deployment, or workspace conventions, also update `rigel-core`.
 5. Documentation is part of delivery. A code change is not considered complete until the relevant docs are aligned.
 6. After local verification, every repository that actually changed must be committed and pushed to its remote. Do not create empty commits.
-7. Backend services should use Go whenever practical. `rigel-jd-collector` must use Go. `rigel-goofish-collector` may retain upstream-required Python components, but must expose clean boundaries.
+7. Backend services should use Go whenever practical. `rigel-jd-collector` must use Go.
 8. External platform integrations must stay behind local clients or adapters. Unverified third-party capabilities must be marked `TODO` or `MOCK`.
 9. Current product focus is `daily price collection -> canonical model normalization -> aggregated price catalog -> AI recommendation`. Work that does not support this flow is secondary.
 
@@ -115,12 +112,10 @@ docker compose up --build
 - `http://localhost:18082/healthz` build engine
 - `http://localhost:18083/healthz` AI advisor
 - `http://localhost:18084/healthz` console
-- `http://localhost:18085/healthz` Goofish collector
 - `http://localhost:18086/healthz` JD browser collector
 
 ## Current Notes
 
 - JD browser collection is a practical fallback path and remains `TODO / UNVERIFIED` for long-term production stability.
-- Goofish integration is now active again, but still in adapter-stage work.
 - External platform integrations remain behind local adapters and should not be treated as stable official APIs unless verified.
 - `docker-compose.yml`, `.env`, and the JD `cookie` file are now expected to be managed from `rigel-core`.

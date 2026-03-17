@@ -4,7 +4,7 @@
 
 Rigel should be understood as a daily market-data pipeline with an AI recommendation layer on top.
 
-1. collectors fetch raw JD and Goofish product samples
+1. collectors fetch raw JD product samples
 2. raw titles and prices are stored as platform records
 3. `rigel-build-engine` maps raw samples into canonical part models
 4. `rigel-build-engine` aggregates daily model prices
@@ -40,7 +40,6 @@ That means the most important structured output is:
 
 Phase 1 should be able to answer this question reliably:
 
-- given `6000 RMB` and `gaming`, what parts does AI recommend based on today's aggregated JD and Goofish price catalog?
+- given `6000 RMB` and `gaming`, what parts does AI recommend based on today's aggregated JD price catalog?
 
-`rigel-goofish-collector` remains reference-only in phase 1.
-Its output should enrich the catalog, not directly override the main JD new-part baseline.
+The current active scope uses JD as the primary collection source.

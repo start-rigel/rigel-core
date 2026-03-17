@@ -14,7 +14,7 @@ The most important records in the system are:
 
 The schema should support this daily flow:
 
-1. store raw JD and Goofish product samples
+1. store raw JD product samples
 2. append price snapshots
 3. map raw products to canonical part models
 4. aggregate per-day prices per canonical model
@@ -23,7 +23,6 @@ The schema should support this daily flow:
 ## Ownership
 
 - `rigel-jd-collector`: writes `products`, `price_snapshots`, `jobs`
-- `rigel-goofish-collector`: writes Goofish `products`, `price_snapshots`, `jobs` and contributes to market summaries
 - `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`, and minimal compatibility/build outputs
 - `rigel-ai-advisor`: consumes structured catalog/build payloads, not raw crawler payloads
 - `rigel-console`: orchestrates through service APIs
@@ -32,7 +31,7 @@ The schema should support this daily flow:
 
 - `parts`: canonical hardware part catalog and canonical model keys
 - `part_specs`: only lightweight structured attributes that are still needed for minimal hard checks
-- `products`: raw platform product records from JD or Goofish
+- `products`: raw platform product records from JD
 - `product_part_mapping`: normalized mapping from raw product to canonical part/model
 - `price_snapshots`: append-only captured price history
 - `part_market_summary`: daily aggregated market data by canonical part and platform
