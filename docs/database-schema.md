@@ -24,7 +24,7 @@ The schema should support this daily flow:
 
 - `rigel-jd-collector`: queries JD Union/OpenAPI and writes `products`, `price_snapshots`, `jobs`
 - `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`, and minimal compatibility/build outputs
-- `rigel-build-engine`: also owns recommendation payload generation from structured catalog/build data
+- `rigel-build-engine`: also owns AI request payload generation from structured catalog/build data and recommendation response assembly
 - `rigel-console`: orchestrates through service APIs
 
 ## Table Intent

@@ -21,7 +21,8 @@ Rigel is a PC build recommendation platform for Chinese users.
 
 ## Architecture Rules
 - Build compatibility must be decided in rigel-build-engine
-- Recommendation and explanation output are currently generated inside rigel-build-engine
+- Recommendation and explanation output are currently owned by rigel-build-engine
+- rigel-build-engine accepts UI parameters, organizes hardware information, and requests AI API analysis
 - JD is the primary data source in the current scope
 - rigel-jd-collector's active responsibility is limited to JD Union/OpenAPI query and persistence
 - All services must use environment variables

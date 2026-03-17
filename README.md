@@ -13,7 +13,7 @@ The project is now centered on one short pipeline:
 1. query JD Union data once per day
 2. normalize raw product titles into canonical part models
 3. aggregate daily prices per canonical model
-4. let `rigel-build-engine` generate recommendation output from `budget + use case + current price catalog`
+4. let `rigel-build-engine` accept UI parameters, organize current hardware information, and request AI API analysis
 5. return a readable build recommendation through `rigel-console`
 
 The main product output is not a crawler dashboard and not a heavy rule engine.
@@ -43,7 +43,7 @@ rigel/
 ## Module Responsibilities
 
 - `rigel-jd-collector`: call JD Union/OpenAPI, query raw JD product samples, and write daily price snapshots.
-- `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, generate recommendation output, and keep only minimal hard compatibility checks.
+- `rigel-build-engine`: accept UI parameters from `rigel-console`, organize hardware information, request AI API analysis, and keep only minimal hard compatibility checks.
 - `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
 
 ## What Matters Most
@@ -71,7 +71,7 @@ Current implementation work is being re-aligned toward:
 - daily JD Union price collection
 - canonical model normalization
 - per-model daily aggregation
-- AI-first recommendation output
+- build-engine-owned AI analysis output
 - only minimal hard checks in `rigel-build-engine`
 
 Heavier compatibility/scoring logic and larger admin surfaces are secondary to this core flow.
