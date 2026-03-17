@@ -36,27 +36,12 @@ services:
       RIGEL_SERVICE_NAME: rigel-jd-collector
       RIGEL_HTTP_PORT: ${RIGEL_JD_COLLECTOR_PORT}
     depends_on:
-      rigel-jd-browser-collector:
-        condition: service_started
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     ports:
       - "${RIGEL_JD_COLLECTOR_PORT}:${RIGEL_JD_COLLECTOR_PORT}"
-
-  rigel-jd-browser-collector:
-    build:
-      context: ../rigel-jd-browser-collector
-    env_file:
-      - .env
-    environment:
-      RIGEL_SERVICE_NAME: rigel-jd-browser-collector
-      RIGEL_HTTP_PORT: ${RIGEL_JD_BROWSER_COLLECTOR_PORT:-18086}
-    volumes:
-      - ./cookie:/run/rigel/jd-cookie:ro
-    ports:
-      - "${RIGEL_JD_BROWSER_COLLECTOR_PORT:-18086}:${RIGEL_JD_BROWSER_COLLECTOR_PORT:-18086}"
 
   rigel-build-engine:
     build:
@@ -87,22 +72,6 @@ services:
         condition: service_started
     ports:
       - "${RIGEL_CONSOLE_PORT}:${RIGEL_CONSOLE_PORT}"
-
-  rigel-goofish-collector:
-    build:
-      context: ../rigel-goofish-collector
-    env_file:
-      - .env
-    environment:
-      RIGEL_SERVICE_NAME: rigel-goofish-collector
-      RIGEL_HTTP_PORT: ${RIGEL_GOOFISH_COLLECTOR_PORT}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "${RIGEL_GOOFISH_COLLECTOR_PORT}:${RIGEL_GOOFISH_COLLECTOR_PORT}"
 
 volumes:
   postgres_data:

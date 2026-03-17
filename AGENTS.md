@@ -23,6 +23,7 @@ Rigel is a PC build recommendation platform for Chinese users.
 - Build compatibility must be decided in rigel-build-engine
 - Recommendation and explanation output are currently generated inside rigel-build-engine
 - JD is the primary data source in the current scope
+- rigel-jd-collector's active responsibility is limited to JD Union/OpenAPI query and persistence
 - All services must use environment variables
 - Prefer simple, testable abstractions
 - Keep external platform integrations behind client/adapters

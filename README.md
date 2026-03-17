@@ -10,7 +10,7 @@ All core docs and shared operational files now live in this repository.
 
 The project is now centered on one short pipeline:
 
-1. collect JD prices once per day
+1. query JD Union data once per day
 2. normalize raw product titles into canonical part models
 3. aggregate daily prices per canonical model
 4. let `rigel-build-engine` generate recommendation output from `budget + use case + current price catalog`
@@ -42,7 +42,7 @@ rigel/
 
 ## Module Responsibilities
 
-- `rigel-jd-collector`: collect JD raw product samples and daily price snapshots.
+- `rigel-jd-collector`: call JD Union/OpenAPI, query raw JD product samples, and write daily price snapshots.
 - `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, generate recommendation output, and keep only minimal hard compatibility checks.
 - `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
 
@@ -68,7 +68,7 @@ That catalog is what later gets sent to AI together with user intent such as `60
 
 Current implementation work is being re-aligned toward:
 
-- daily JD price collection
+- daily JD Union price collection
 - canonical model normalization
 - per-model daily aggregation
 - AI-first recommendation output
@@ -94,7 +94,7 @@ The following rules are hard constraints for this workspace:
 
 1. Enter `rigel-core`.
 2. Copy `.env.example` to `.env`.
-3. Keep shared runtime files such as `.env` and `cookie` in `rigel-core`.
+3. Keep shared runtime files such as `.env` in `rigel-core`.
 4. Start infrastructure and services:
 
 ```bash
@@ -111,4 +111,4 @@ docker compose up --build
 ## Current Notes
 
 - External platform integrations remain behind local adapters and should not be treated as stable official APIs unless verified.
-- `docker-compose.yml`, `.env`, and the JD `cookie` file are now expected to be managed from `rigel-core`.
+- `docker-compose.yml` and `.env` are now expected to be managed from `rigel-core`.

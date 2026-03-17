@@ -4,7 +4,7 @@
 
 Rigel should be understood as a daily market-data pipeline with an AI recommendation layer on top.
 
-1. collectors fetch raw JD product samples
+1. `rigel-jd-collector` queries JD Union/OpenAPI for raw JD product samples
 2. raw titles and prices are stored as platform records
 3. `rigel-build-engine` maps raw samples into canonical part models
 4. `rigel-build-engine` aggregates daily model prices
@@ -13,7 +13,7 @@ Rigel should be understood as a daily market-data pipeline with an AI recommenda
 
 ## Service Boundaries
 
-- Collectors own external platform integration details and login/session handling.
+- `rigel-jd-collector` owns JD Union/OpenAPI integration details and persistence.
 - `rigel-build-engine` owns canonical model mapping and daily price aggregation.
 - `rigel-build-engine` keeps only minimal hard checks that should not be delegated to AI.
   - current intent: CPU/mainboard platform and mainboard/RAM type class

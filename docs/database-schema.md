@@ -14,7 +14,7 @@ The most important records in the system are:
 
 The schema should support this daily flow:
 
-1. store raw JD product samples
+1. store raw JD Union product samples
 2. append price snapshots
 3. map raw products to canonical part models
 4. aggregate per-day prices per canonical model
@@ -22,7 +22,7 @@ The schema should support this daily flow:
 
 ## Ownership
 
-- `rigel-jd-collector`: writes `products`, `price_snapshots`, `jobs`
+- `rigel-jd-collector`: queries JD Union/OpenAPI and writes `products`, `price_snapshots`, `jobs`
 - `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`, and minimal compatibility/build outputs
 - `rigel-build-engine`: also owns recommendation payload generation from structured catalog/build data
 - `rigel-console`: orchestrates through service APIs
