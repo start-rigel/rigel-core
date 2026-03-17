@@ -15,10 +15,8 @@ Rigel should be understood as a daily market-data pipeline with an AI recommenda
 
 - `rigel-jd-collector` owns JD Union/OpenAPI integration details and persistence.
 - `rigel-build-engine` owns canonical model mapping, daily price aggregation, and AI analysis request assembly.
-- `rigel-build-engine` keeps only minimal hard checks that should not be delegated to AI.
-  - current intent: CPU/mainboard platform and mainboard/RAM type class
 - `rigel-build-engine` currently owns the aggregation layer and the AI analysis request/response layer.
-- `rigel-console` is a thin API/UI shell and should not own pricing or compatibility logic.
+- `rigel-console` is a thin API/UI shell and should not own pricing or analysis logic.
 
 ## Current Design Principle
 

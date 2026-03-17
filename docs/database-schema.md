@@ -23,21 +23,17 @@ The schema should support this daily flow:
 ## Ownership
 
 - `rigel-jd-collector`: queries JD Union/OpenAPI and writes `products`, `price_snapshots`, `jobs`
-- `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`, and minimal compatibility/build outputs
-- `rigel-build-engine`: also owns AI request payload generation from structured catalog/build data and recommendation response assembly
+- `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`
+- `rigel-build-engine`: also owns AI request payload generation from structured catalog data and recommendation response assembly
 - `rigel-console`: orchestrates through service APIs
 
 ## Table Intent
 
 - `parts`: canonical hardware part catalog and canonical model keys
-- `part_specs`: only lightweight structured attributes that are still needed for minimal hard checks
 - `products`: raw platform product records from JD
 - `product_part_mapping`: normalized mapping from raw product to canonical part/model
 - `price_snapshots`: append-only captured price history
 - `part_market_summary`: daily aggregated market data by canonical part and platform
-- `build_requests`: inbound AI/build requests
-- `build_results`: generated outputs or cached build payloads
-- `build_result_items`: selected items inside a result
 - `jobs`: collection and processing task records
 
 ## Current Direction Change
@@ -49,4 +45,4 @@ Compared with the earlier design, the center of gravity is now:
 - more emphasis on daily per-model price aggregation
 - more emphasis on AI-ready catalog output
 
-Compatibility data is still allowed, but it should stay minimal and only block obviously invalid combinations.
+Legacy build-request/result tables may still exist in the bootstrap SQL, but they are no longer part of the active module responsibility.

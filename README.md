@@ -43,8 +43,8 @@ rigel/
 ## Module Responsibilities
 
 - `rigel-jd-collector`: call JD Union/OpenAPI, query raw JD product samples, and write daily price snapshots.
-- `rigel-build-engine`: accept UI parameters from `rigel-console`, organize hardware information, request AI API analysis, and keep only minimal hard compatibility checks.
-- `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
+- `rigel-build-engine`: accept UI parameters from `rigel-console`, organize hardware information, aggregate current JD price data, and request AI API analysis.
+- `rigel-console`: minimal API/UI entry point for submitting recommendation requests and showing results.
 
 ## What Matters Most
 
@@ -66,13 +66,12 @@ That catalog is what later gets sent to AI together with user intent such as `60
 
 ## Current Scope
 
-Current implementation work is being re-aligned toward:
+Current implementation work is now aligned toward:
 
 - daily JD Union price collection
 - canonical model normalization
 - per-model daily aggregation
 - build-engine-owned AI analysis output
-- only minimal hard checks in `rigel-build-engine`
 
 Heavier compatibility/scoring logic and larger admin surfaces are secondary to this core flow.
 
