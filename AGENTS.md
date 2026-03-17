@@ -10,7 +10,6 @@ Rigel is a PC build recommendation platform for Chinese users.
 ## Modules
 - rigel-core
 - rigel-jd-collector
-- rigel-jd-browser-collector
 - rigel-build-engine
 - rigel-ai-advisor
 - rigel-console

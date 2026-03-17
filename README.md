@@ -38,14 +38,12 @@ rigel/
 ├── rigel-ai-advisor/
 ├── rigel-build-engine/
 ├── rigel-console/
-├── rigel-jd-browser-collector/
 └── rigel-jd-collector/
 ```
 
 ## Module Responsibilities
 
 - `rigel-jd-collector`: collect JD raw product samples and daily price snapshots.
-- `rigel-jd-browser-collector`: optional browser worker used when JD official API access is unavailable.
 - `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, and keep only minimal hard compatibility checks.
 - `rigel-ai-advisor`: consume `budget + use case + aggregated part catalog` and generate recommendation text.
 - `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
@@ -112,10 +110,8 @@ docker compose up --build
 - `http://localhost:18082/healthz` build engine
 - `http://localhost:18083/healthz` AI advisor
 - `http://localhost:18084/healthz` console
-- `http://localhost:18086/healthz` JD browser collector
 
 ## Current Notes
 
-- JD browser collection is a practical fallback path and remains `TODO / UNVERIFIED` for long-term production stability.
 - External platform integrations remain behind local adapters and should not be treated as stable official APIs unless verified.
 - `docker-compose.yml`, `.env`, and the JD `cookie` file are now expected to be managed from `rigel-core`.
