@@ -74,22 +74,6 @@ services:
     ports:
       - "${RIGEL_BUILD_ENGINE_PORT}:${RIGEL_BUILD_ENGINE_PORT}"
 
-  rigel-ai-advisor:
-    build:
-      context: ../rigel-ai-advisor
-    env_file:
-      - .env
-    environment:
-      RIGEL_SERVICE_NAME: rigel-ai-advisor
-      RIGEL_HTTP_PORT: ${RIGEL_AI_ADVISOR_PORT}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "${RIGEL_AI_ADVISOR_PORT}:${RIGEL_AI_ADVISOR_PORT}"
-
   rigel-console:
     build:
       context: ../rigel-console
@@ -100,8 +84,6 @@ services:
       RIGEL_HTTP_PORT: ${RIGEL_CONSOLE_PORT}
     depends_on:
       rigel-build-engine:
-        condition: service_started
-      rigel-ai-advisor:
         condition: service_started
     ports:
       - "${RIGEL_CONSOLE_PORT}:${RIGEL_CONSOLE_PORT}"

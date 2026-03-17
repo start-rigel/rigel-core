@@ -11,19 +11,17 @@ Rigel is a PC build recommendation platform for Chinese users.
 - rigel-core
 - rigel-jd-collector
 - rigel-build-engine
-- rigel-ai-advisor
 - rigel-console
 
 ## Language Rules
 - Backend should use Go whenever possible
 - rigel-jd-collector must use Go
 - rigel-build-engine should use Go
-- rigel-ai-advisor should use Go
 - rigel-console backend should use Go
 
 ## Architecture Rules
 - Build compatibility must be decided in rigel-build-engine
-- AI is explanation-only
+- Recommendation and explanation output are currently generated inside rigel-build-engine
 - JD is the primary data source in the current scope
 - All services must use environment variables
 - Prefer simple, testable abstractions

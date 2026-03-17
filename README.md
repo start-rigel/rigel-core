@@ -13,8 +13,8 @@ The project is now centered on one short pipeline:
 1. collect JD prices once per day
 2. normalize raw product titles into canonical part models
 3. aggregate daily prices per canonical model
-4. send `budget + use case + current price catalog` to AI
-5. return a readable build recommendation
+4. let `rigel-build-engine` generate recommendation output from `budget + use case + current price catalog`
+5. return a readable build recommendation through `rigel-console`
 
 The main product output is not a crawler dashboard and not a heavy rule engine.
 The main product output is a daily usable part-price catalog that AI can consume.
@@ -35,7 +35,6 @@ rigel/
 │   │   ├── architecture.md
 │   │   └── database-schema.md
 │   └── 电脑配置平台项目方案文档.md
-├── rigel-ai-advisor/
 ├── rigel-build-engine/
 ├── rigel-console/
 └── rigel-jd-collector/
@@ -44,8 +43,7 @@ rigel/
 ## Module Responsibilities
 
 - `rigel-jd-collector`: collect JD raw product samples and daily price snapshots.
-- `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, and keep only minimal hard compatibility checks.
-- `rigel-ai-advisor`: consume `budget + use case + aggregated part catalog` and generate recommendation text.
+- `rigel-build-engine`: normalize titles into canonical models, aggregate daily prices, generate recommendation output, and keep only minimal hard compatibility checks.
 - `rigel-console`: minimal API/UI entry point for triggering collection and viewing results.
 
 ## What Matters Most
@@ -108,7 +106,6 @@ docker compose up --build
 
 - `http://localhost:18081/healthz` JD collector
 - `http://localhost:18082/healthz` build engine
-- `http://localhost:18083/healthz` AI advisor
 - `http://localhost:18084/healthz` console
 
 ## Current Notes

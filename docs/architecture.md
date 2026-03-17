@@ -8,7 +8,7 @@ Rigel should be understood as a daily market-data pipeline with an AI recommenda
 2. raw titles and prices are stored as platform records
 3. `rigel-build-engine` maps raw samples into canonical part models
 4. `rigel-build-engine` aggregates daily model prices
-5. `rigel-ai-advisor` receives `budget + use case + canonical price catalog`
+5. `rigel-build-engine` generates recommendation and explanation output from the structured catalog
 6. `rigel-console` exposes the result
 
 ## Service Boundaries
@@ -17,7 +17,7 @@ Rigel should be understood as a daily market-data pipeline with an AI recommenda
 - `rigel-build-engine` owns canonical model mapping and daily price aggregation.
 - `rigel-build-engine` keeps only minimal hard checks that should not be delegated to AI.
   - current intent: CPU/mainboard platform and mainboard/RAM type class
-- `rigel-ai-advisor` is the main recommendation-expression layer.
+- `rigel-build-engine` currently owns the recommendation-expression layer as well as the aggregation layer.
 - `rigel-console` is a thin API/UI shell and should not own pricing or compatibility logic.
 
 ## Current Design Principle

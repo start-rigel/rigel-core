@@ -24,7 +24,7 @@ The schema should support this daily flow:
 
 - `rigel-jd-collector`: writes `products`, `price_snapshots`, `jobs`
 - `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`, and minimal compatibility/build outputs
-- `rigel-ai-advisor`: consumes structured catalog/build payloads, not raw crawler payloads
+- `rigel-build-engine`: also owns recommendation payload generation from structured catalog/build data
 - `rigel-console`: orchestrates through service APIs
 
 ## Table Intent
