@@ -6,6 +6,18 @@ shared constraints, Docker Compose orchestration, and database bootstrap files.
 The workspace root `/Users/mac-mini/work/private/rigel` is not a Git repository.
 All core docs and shared operational files now live in this repository.
 
+## Project Summary
+
+Rigel is now a compact 3-module PC hardware recommendation system:
+
+1. `rigel-jd-collector` queries JD Union/OpenAPI and stores raw part products plus price snapshots
+2. `rigel-build-engine` normalizes raw titles into canonical models, aggregates the current price catalog, and requests AI analysis
+3. `rigel-console` accepts user input and displays the recommendation result
+
+The current main pipeline is:
+
+`JD raw products -> canonical price catalog -> AI analysis -> Console output`
+
 ## Current Product Direction
 
 The project is now centered on one short pipeline:
