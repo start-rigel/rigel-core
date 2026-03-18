@@ -4,17 +4,14 @@
 
 ## 1. 词库列表接口
 
+建议接口：
+
+- `GET /api/v1/keyword-seeds`
+
 ### 请求示例
 
-```json
-{
-  "category": "cpu",
-  "brand": "AMD",
-  "keyword": "7500F",
-  "enabled": true,
-  "page": 1,
-  "page_size": 20
-}
+```text
+GET /api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page=1&page_size=20
 ```
 
 ### 响应示例
@@ -43,6 +40,10 @@
 
 ## 2. 单个词条详情接口
 
+建议接口：
+
+- `GET /api/v1/keyword-seeds/{id}`
+
 ### 响应示例
 
 ```json
@@ -62,6 +63,11 @@
 ```
 
 ## 3. 新增或编辑词条接口
+
+建议接口：
+
+- `POST /api/v1/keyword-seeds`
+- `PUT /api/v1/keyword-seeds/{id}`
 
 ### 请求体
 
@@ -108,6 +114,13 @@
 
 实际上传方式建议使用文件上传，不直接走纯 JSON。
 
+HTTP 示例：
+
+```bash
+curl -X POST http://localhost:18084/api/v1/keyword-seeds/import \
+  -F "file=@keyword_seeds.xlsx"
+```
+
 ### 建议响应
 
 ```json
@@ -124,14 +137,19 @@
 }
 ```
 
-## 5. console -> build-engine 推荐请求
+## 5. console 推荐请求
+
+建议接口：
+
+- `POST /catalog/recommend`
 
 ### 请求体
 
 ```json
 {
   "budget": 6000,
-  "usage": "gaming",
+  "use_case": "gaming",
+  "build_mode": "mixed",
   "brand_preference": {
     "cpu": "amd",
     "gpu": "nvidia"
@@ -148,88 +166,132 @@
 | 字段 | 必填 | 说明 |
 |---|---|---|
 | `budget` | 是 | 预算 |
-| `usage` | 是 | 使用场景 |
+| `use_case` | 是 | 使用场景 |
+| `build_mode` | 否 | 装机场景：`new_only`、`used_only`、`mixed` |
 | `brand_preference` | 否 | 品牌偏好 |
 | `special_requirements` | 否 | 特殊要求 |
 | `notes` | 否 | 补充说明 |
 
-## 6. build-engine 内部 AI 输入
+### 响应示例
+
+```json
+{
+  "catalog_item_count": 24,
+  "catalog_warnings": [],
+  "selection": {
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "estimated_total": 4206,
+    "warnings": [
+      "当前价格目录缺少这些类别的数据：MB、PSU、CASE、COOLER。"
+    ],
+    "selected_items": [
+      {
+        "category": "CPU",
+        "display_name": "AMD 7500f",
+        "normalized_key": "cpu-7500f",
+        "sample_count": 3,
+        "selected_price": 899,
+        "median_price": 899,
+        "source_platforms": ["jd"],
+        "reasons": [
+          "当前类别按 1200 元目标预算挑选了更接近中位价的型号。"
+        ]
+      }
+    ]
+  },
+  "advice": {
+    "summary": "基于当前价格目录，这份 gaming 采购草案总价约 4206 元。",
+    "reasons": [
+      "草案总价约 4206 元，优先参考了各型号的中位价和样本量。"
+    ],
+    "fit_for": ["1080p/2K 主流游戏场景"],
+    "risks": ["价格目录会随平台活动和库存变化波动。"],
+    "upgrade_advice": ["如果游戏库会持续变大，优先把 SSD 升到 2TB。"],
+    "alternative_note": "如果你更看重品牌或静音，可以再生成一版草案。"
+  }
+}
+```
+
+## 6. build-engine 推荐请求
 
 ### 请求体
 
 ```json
 {
-  "user_request": {
-    "budget": 6000,
-    "usage": "gaming",
-    "brand_preference": {
-      "cpu": "amd",
-      "gpu": "nvidia"
-    },
-    "special_requirements": [],
-    "notes": "1080p游戏为主"
-  },
-  "price_catalog": {
-    "cpu": [
+  "budget": 6000,
+  "use_case": "gaming",
+  "build_mode": "mixed",
+  "catalog": {
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "warnings": [],
+    "items": [
       {
-        "model": "Ryzen 5 7500F",
-        "price": 899,
-        "price_min": 859,
-        "price_max": 959,
-        "sample_count": 6
+        "category": "CPU",
+        "brand": "AMD",
+        "model": "7500f",
+        "display_name": "AMD 7500f",
+        "normalized_key": "cpu-7500f",
+        "sample_count": 3,
+        "avg_price": 899,
+        "median_price": 899,
+        "min_price": 859,
+        "max_price": 939,
+        "platforms": ["jd"]
       }
-    ],
-    "gpu": [
-      {
-        "model": "RTX 4060",
-        "price": 2399,
-        "price_min": 2299,
-        "price_max": 2499,
-        "sample_count": 8
-      }
-    ],
-    "motherboard": [],
-    "ram": [],
-    "ssd": [],
-    "psu": [],
-    "case": [],
-    "cooler": []
+    ]
   }
 }
 ```
 
-## 7. build-engine -> console 推荐响应
+说明：
+
+- 当前 build-engine 的 `POST /api/v1/advice/catalog` 直接接收 `budget`、`use_case`、`build_mode` 和整份 `catalog`
+- 不是旧版 `user_request + price_catalog` 二层结构
+
+## 7. build-engine 推荐响应
 
 ### 响应体
 
 ```json
 {
-  "summary": "推荐一套 6000 元左右的 1080p 游戏配置",
-  "parts": [
-    {
-      "category": "cpu",
-      "model": "Ryzen 5 7500F",
-      "price": 899,
-      "reason": "当前预算内性价比较高"
-    },
-    {
-      "category": "gpu",
-      "model": "RTX 4060",
-      "price": 2399,
-      "reason": "适合1080p主流游戏"
-    }
-  ],
-  "total_price": 5980,
-  "reasoning": [
-    "整体预算优先保证显卡性能",
-    "AMD 平台当前价格更合适"
-  ],
-  "alternatives": [
-    "如果更重视生产力，可以考虑 Intel 平台"
-  ],
-  "warnings": [
-    "当前价格可能随京东活动波动"
-  ]
+  "provider": "local",
+  "fallback_used": true,
+  "selection": {
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "estimated_total": 4206,
+    "warnings": [
+      "当前价格目录缺少这些类别的数据：MB、PSU、CASE、COOLER。"
+    ],
+    "selected_items": [
+      {
+        "category": "CPU",
+        "display_name": "AMD 7500f",
+        "normalized_key": "cpu-7500f",
+        "sample_count": 3,
+        "selected_price": 899,
+        "median_price": 899,
+        "source_platforms": ["jd"],
+        "reasons": [
+          "当前类别按 1200 元目标预算挑选了更接近中位价的型号。"
+        ]
+      }
+    ]
+  },
+  "advisory": {
+    "summary": "基于当前价格目录，这份 gaming 采购草案总价约 4206 元。",
+    "reasons": [
+      "草案总价约 4206 元，优先参考了各型号的中位价和样本量。"
+    ],
+    "fit_for": ["1080p/2K 主流游戏场景"],
+    "risks": ["价格目录会随平台活动和库存变化波动。"],
+    "upgrade_advice": ["如果游戏库会持续变大，优先把 SSD 升到 2TB。"],
+    "alternative_note": "如果你更看重品牌或静音，可以再生成一版草案。"
+  }
 }
 ```
 
@@ -237,18 +299,17 @@
 
 | 字段 | 必填 | 说明 |
 |---|---|---|
-| `summary` | 是 | 一句话总结 |
-| `parts` | 是 | 推荐配件列表 |
-| `total_price` | 是 | 总价 |
-| `reasoning` | 是 | 推荐理由 |
-| `alternatives` | 否 | 备选说明 |
-| `warnings` | 否 | 风险提示 |
+| `provider` | 是 | 当前推荐提供方，例如 `local` |
+| `fallback_used` | 是 | 是否走本地模板化回退路径 |
+| `selection` | 是 | 从价格目录中挑选出的采购草案 |
+| `advisory` | 是 | 面向页面展示的说明块 |
 
-### `parts` 字段说明
+### `selection.selected_items` 字段说明
 
 | 字段 | 必填 | 说明 |
 |---|---|---|
 | `category` | 是 | 配件类别 |
-| `model` | 是 | 型号 |
-| `price` | 是 | 当前参考价 |
-| `reason` | 是 | 选择理由 |
+| `display_name` | 是 | 展示名 |
+| `normalized_key` | 是 | 归一化型号键 |
+| `selected_price` | 是 | 当前选择价格 |
+| `reasons` | 否 | 选择理由列表 |

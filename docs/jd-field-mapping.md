@@ -42,6 +42,47 @@
 | `isJdSale` / 可推广状态相关字段 | `is_promotable` | `rigel_products` | 先按布尔化处理 |
 | 整体响应对象 | `raw_payload` | `rigel_products` | 原始追溯 |
 
+示例上游对象：
+
+```json
+{
+  "skuId": 1001001,
+  "goodsName": "NVIDIA RTX 4060 8G 京东自营",
+  "materialUrl": "https://item.jd.com/1001001.html",
+  "imageUrl": "https://img.example.com/4060.jpg",
+  "price": 2399,
+  "brandName": "NVIDIA",
+  "shopName": "京东自营",
+  "categoryInfo": {
+    "cid1Name": "电脑、办公",
+    "cid2Name": "电脑整机",
+    "cid3Name": "显卡"
+  },
+  "commissionShare": 2.5,
+  "couponInfo": "满 2499 减 100",
+  "isJdSale": 1
+}
+```
+
+映射后本地对象示例：
+
+```json
+{
+  "source_platform": "jd",
+  "external_id": "1001001",
+  "title": "NVIDIA RTX 4060 8G 京东自营",
+  "product_url": "https://item.jd.com/1001001.html",
+  "image_url": "https://img.example.com/4060.jpg",
+  "price": 2399,
+  "brand_name": "NVIDIA",
+  "shop_name": "京东自营",
+  "category_name": "显卡",
+  "commission_rate": 2.5,
+  "coupon_info": "满 2499 减 100",
+  "is_promotable": true
+}
+```
+
 ### 同步写入价格快照
 
 每次采集都应追加一条价格快照：
@@ -52,6 +93,18 @@
 | 当前采集时间 | `captured_at` | `rigel_price_snapshots` |
 | 固定 `CNY` | `currency` | `rigel_price_snapshots` |
 | 整体响应对象 | `raw_payload` | `rigel_price_snapshots` |
+
+价格快照示例：
+
+```json
+{
+  "product_id": "prod-1001001",
+  "source_platform": "jd",
+  "price": 2399,
+  "currency": "CNY",
+  "captured_at": "2026-03-18T12:00:00Z"
+}
+```
 
 ## 接口 2：`jd.union.open.goods.promotiongoodsinfo.query`
 
@@ -73,6 +126,21 @@
 | 优惠券字段 | `coupon_info` | `rigel_products` | 补全优惠信息 |
 | 推广状态字段 | `is_promotable` | `rigel_products` | 刷新可推广状态 |
 | 整体响应对象 | `raw_payload` | `rigel_products` | 原始追溯 |
+
+补全结果示例：
+
+```json
+{
+  "external_id": "1001001",
+  "title": "NVIDIA RTX 4060 8G 显卡",
+  "product_url": "https://item.jd.com/1001001.html",
+  "image_url": "https://img.example.com/4060-detail.jpg",
+  "price": 2359,
+  "commission_rate": 2.8,
+  "coupon_info": "满 2499 减 140",
+  "is_promotable": true
+}
+```
 
 ## 接口 3：`jd.union.open.category.goods.get`
 

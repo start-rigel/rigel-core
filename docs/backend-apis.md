@@ -27,6 +27,22 @@
 - `GET /api/v1/products`
   - 查询已采集的原始商品
 
+### 请求示例
+
+```bash
+curl http://localhost:18081/healthz
+curl -X POST http://localhost:18081/api/v1/collect/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "keyword": "RTX 4060",
+    "category": "GPU",
+    "brand": "NVIDIA",
+    "limit": 2,
+    "persist": true
+  }'
+curl "http://localhost:18081/api/v1/products?category=GPU&real_only=true&limit=20"
+```
+
 ### 当前建议补充接口
 
 - `POST /api/v1/collect/by-seed`
@@ -48,6 +64,25 @@
 - `POST /api/v1/advice/catalog`
   - 接收 `user_request + price_catalog`
   - 返回结构化推荐结果
+
+### 请求示例
+
+```bash
+curl http://localhost:18082/healthz
+curl "http://localhost:18082/api/v1/catalog/prices?use_case=gaming&build_mode=mixed&limit=20"
+curl -X POST http://localhost:18082/api/v1/advice/catalog \
+  -H "Content-Type: application/json" \
+  -d '{
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "catalog": {
+      "use_case": "gaming",
+      "build_mode": "mixed",
+      "items": []
+    }
+  }'
+```
 
 ### 当前建议补充接口
 
@@ -71,6 +106,25 @@
   - 接收页面参数
   - 调用 build-engine
   - 返回推荐结果
+
+### 请求示例
+
+```bash
+curl http://localhost:18084/healthz
+curl -X POST http://localhost:18084/catalog/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "brand_preference": {
+      "cpu": "amd",
+      "gpu": "nvidia"
+    },
+    "special_requirements": ["wifi_motherboard"],
+    "notes": "1080p 游戏为主"
+  }'
+```
 
 ### 当前必须提供的页面路由
 
@@ -124,6 +178,55 @@
 | `/keywords/new` | 无 | `POST /api/v1/keyword-seeds` |
 | `/keywords/{id}/edit` | `GET /api/v1/keyword-seeds/{id}` | `PUT /api/v1/keyword-seeds/{id}` |
 | `/keywords/import` | 无 | `POST /api/v1/keyword-seeds/import` `GET /api/v1/keyword-seeds/template` |
+
+## 当前返回示例摘要
+
+### collector `/api/v1/collect/search`
+
+```json
+{
+  "job_id": "job-1",
+  "mode": "mock",
+  "persisted": true,
+  "persisted_count": 2,
+  "products": []
+}
+```
+
+### build-engine `/api/v1/catalog/prices`
+
+```json
+{
+  "use_case": "gaming",
+  "build_mode": "mixed",
+  "warnings": [],
+  "items": []
+}
+```
+
+### console `/catalog/recommend`
+
+```json
+{
+  "catalog_item_count": 24,
+  "catalog_warnings": [],
+  "selection": {
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "estimated_total": 4206,
+    "selected_items": []
+  },
+  "advice": {
+    "summary": "基于当前价格目录生成的采购草案。",
+    "reasons": [],
+    "fit_for": [],
+    "risks": [],
+    "upgrade_advice": [],
+    "alternative_note": ""
+  }
+}
+```
 
 ## 接口优先级
 

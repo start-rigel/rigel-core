@@ -129,6 +129,16 @@ Excel 文件用于维护当前系统的型号词库。
 | motherboard | B650M | B650M |  | B650 | 90 | true | AM5 主流主板 |
 | ram | DDR5 6000 32G | DDR5 6000 32G |  | 32GB DDR5 6000 | 90 | true | |
 
+工作表示例：
+
+```text
+category,keyword,canonical_model,brand,aliases,priority,enabled,notes
+cpu,Ryzen 5 7500F,Ryzen 5 7500F,AMD,"7500F,AMD 7500F",100,true,主流游戏 CPU
+gpu,RTX 4060,RTX 4060,NVIDIA,"4060,RTX4060",100,true,1080p 主流显卡
+motherboard,B650M,B650M,,"B650,AMD B650M",90,true,AM5 主流主板
+ram,DDR5 6000 32G,DDR5 6000 32G,,"32GB DDR5 6000",90,true,
+```
+
 ## 导入校验规则
 
 导入时至少校验：
@@ -148,3 +158,23 @@ Excel 文件用于维护当前系统的型号词库。
 - 写入 `rigel_keyword_seeds`
 - 记录导入任务到 `rigel_jobs`
 - 返回导入成功数、失败数、错误明细
+
+导入响应示例：
+
+```json
+{
+  "job_id": "job-123",
+  "imported_count": 20,
+  "failed_count": 2,
+  "errors": [
+    {
+      "row": 7,
+      "message": "category is invalid"
+    },
+    {
+      "row": 11,
+      "message": "keyword is required"
+    }
+  ]
+}
+```

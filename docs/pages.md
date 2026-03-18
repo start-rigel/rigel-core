@@ -35,7 +35,8 @@
 页面字段：
 
 - `budget`
-- `usage`
+- `use_case`
+- `build_mode`
 - `brand_preference.cpu`
 - `brand_preference.gpu`
 - `special_requirements`
@@ -47,12 +48,57 @@
 
 结果展示字段：
 
-- `summary`
-- `parts`
-- `total_price`
-- `reasoning`
-- `alternatives`
-- `warnings`
+- `catalog_item_count`
+- `selection.estimated_total`
+- `selection.selected_items`
+- `selection.warnings`
+- `advice.summary`
+- `advice.reasons`
+- `advice.risks`
+
+页面交互示例：
+
+1. 用户输入 `budget=6000`、`use_case=gaming`
+2. 用户选择 `cpu=amd`、`gpu=nvidia`
+3. 页面调用 `POST /catalog/recommend`
+4. 页面展示 `selection.selected_items` 和 `advice.summary`
+
+示例请求体：
+
+```json
+{
+  "budget": 6000,
+  "use_case": "gaming",
+  "build_mode": "mixed",
+  "brand_preference": {
+    "cpu": "amd",
+    "gpu": "nvidia"
+  },
+  "special_requirements": ["wifi_motherboard"],
+  "notes": "1080p 游戏为主"
+}
+```
+
+示例结果块：
+
+```json
+{
+  "catalog_item_count": 24,
+  "selection": {
+    "estimated_total": 4206,
+    "selected_items": [
+      {
+        "category": "CPU",
+        "display_name": "AMD 7500f",
+        "selected_price": 899
+      }
+    ]
+  },
+  "advice": {
+    "summary": "基于当前价格目录，这份 gaming 采购草案总价约 4206 元。"
+  }
+}
+```
 
 ### 2. 型号词库列表页
 
@@ -94,6 +140,13 @@
 - `notes`
 - `updated_at`
 
+页面展示示例：
+
+| id | category | keyword | canonical_model | brand | enabled | updated_at |
+|---|---|---|---|---|---|---|
+| seed-1 | cpu | Ryzen 5 7500F | Ryzen 5 7500F | AMD | true | 2026-03-18T10:00:00+08:00 |
+| seed-2 | gpu | RTX 4060 | RTX 4060 | NVIDIA | true | 2026-03-18T10:00:00+08:00 |
+
 ### 3. 型号词库新增页
 
 路径：
@@ -119,6 +172,21 @@
 - `priority`
 - `enabled`
 - `notes`
+
+示例表单值：
+
+```json
+{
+  "category": "cpu",
+  "keyword": "Ryzen 5 7500F",
+  "canonical_model": "Ryzen 5 7500F",
+  "brand": "AMD",
+  "aliases": ["7500F", "AMD 7500F"],
+  "priority": 100,
+  "enabled": true,
+  "notes": "主流游戏 CPU"
+}
+```
 
 ### 4. 型号词库编辑页
 
@@ -151,6 +219,13 @@
 - `enabled`
 - `notes`
 
+示例编辑流程：
+
+1. 打开 `/keywords/seed-1/edit`
+2. 页面先请求 `GET /api/v1/keyword-seeds/seed-1`
+3. 用户把 `priority` 从 `90` 改到 `100`
+4. 提交 `PUT /api/v1/keyword-seeds/seed-1`
+
 ### 5. Excel 导入页
 
 路径：
@@ -178,6 +253,22 @@
 - 展示导入失败数
 - 展示错误行与错误原因
 - 展示导入生成的 `job_id`
+
+示例结果：
+
+```json
+{
+  "job_id": "job-123",
+  "imported_count": 20,
+  "failed_count": 2,
+  "errors": [
+    {
+      "row": 7,
+      "message": "category is invalid"
+    }
+  ]
+}
+```
 
 ### 6. Excel 导出动作
 
