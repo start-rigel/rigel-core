@@ -381,12 +381,24 @@ rigel/
 │   │       └── 001_init.sql
 │   ├── docs/
 │   │   ├── architecture.md
-│   │   └── database-schema.md
+│   │   ├── database-schema.md
+│   │   ├── excel-template.md
+│   │   ├── jd-field-mapping.md
+│   │   └── api-contract.md
 │   └── 电脑配置平台项目方案文档.md
 ├── rigel-build-engine/
 ├── rigel-console/
 └── rigel-jd-collector/
 ```
+
+
+## 文档索引
+
+- 架构说明：`docs/architecture.md`
+- 数据库设计：`docs/database-schema.md`
+- Excel 模板规范：`docs/excel-template.md`
+- 京东字段映射：`docs/jd-field-mapping.md`
+- API 契约：`docs/api-contract.md`
 
 ## 强约束
 
