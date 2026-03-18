@@ -5,6 +5,12 @@
 工作区根目录 `/Users/mac-mini/work/private/rigel` 不是 Git 仓库。
 所有共享文档、约束、Compose 编排和数据库初始化文件统一放在 `rigel-core`。
 
+当前三个 Go 服务统一改为读取各自仓库中的 YAML 配置文件：
+
+- `rigel-jd-collector/configs/config.yaml`
+- `rigel-build-engine/configs/config.yaml`
+- `rigel-console/configs/config.yaml`
+
 ## 项目总览
 
 Rigel 当前是一个最小可用的电脑配置推荐系统。
@@ -21,6 +27,8 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 
 - 支持中文 / English 切换
 - 页面语言切换应优先在前端本地完成，不额外增加后端语言接口
+- 用户默认无需注册登录即可使用推荐功能
+- AI 成本控制优先通过匿名配额、缓存复用、风险挑战与服务端限流完成
 
 ## 当前范围
 
@@ -75,6 +83,13 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 5. build-engine 请求 AI 并返回结构化推荐
 6. 页面展示结果
 
+同时要求：
+
+7. 不登录即可使用推荐功能
+8. 不允许前端直接无限制消耗 AI token
+9. 对重复请求优先返回缓存结果
+10. 对异常请求逐级限流，而不是默认增加注册门槛
+
 ## 文档索引
 
 ### 核心文档
@@ -128,8 +143,15 @@ rigel/
 ## 如何启动
 
 ```bash
-cd /Users/mac-mini/work/private/rigel/rigel-core
+cd /home/life/work/rigle/rigel-core
 docker compose up --build
+```
+
+如果需要单独指定配置文件路径，可在容器外直接运行：
+
+```bash
+cd /home/life/work/rigle/rigel-jd-collector
+go run ./cmd/server -config ./configs/config.yaml
 ```
 
 健康检查：

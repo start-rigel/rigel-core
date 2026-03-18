@@ -16,6 +16,8 @@
 - 对外域名使用 `givezj8.cn`
 - 第一版页面支持中文 / English 切换
 - 语言切换由前端本地状态控制，默认不依赖后端单独提供国际化接口
+- 用户默认无需登录即可直接使用推荐功能
+- 对高成本 AI 请求采用匿名配额、缓存复用与风险挑战，不增加默认注册门槛
 
 ## 页面列表
 
@@ -31,6 +33,8 @@
 - 提交推荐请求
 - 展示结构化推荐结果
 - 提供中英文切换
+- 在不登录的前提下完成匿名使用
+- 展示冷却、缓存命中和风险挑战状态
 
 页面字段：
 
@@ -44,6 +48,7 @@
 
 提交接口：
 
+- `GET /api/v1/session/anonymous`
 - `POST /catalog/recommend`
 
 结果展示字段：
@@ -58,10 +63,13 @@
 
 页面交互示例：
 
-1. 用户输入 `budget=6000`、`use_case=gaming`
-2. 用户选择 `cpu=amd`、`gpu=nvidia`
-3. 页面调用 `POST /catalog/recommend`
-4. 页面展示 `selection.selected_items` 和 `advice.summary`
+1. 用户打开首页，页面先调用 `GET /api/v1/session/anonymous`
+2. 用户输入 `budget=6000`、`use_case=gaming`
+3. 用户选择 `cpu=amd`、`gpu=nvidia`
+4. 页面调用 `POST /catalog/recommend`
+5. 若命中缓存则直接展示结果
+6. 若进入短冷却则提示稍后再试
+7. 页面展示 `selection.selected_items` 和 `advice.summary`
 
 示例请求体：
 
@@ -83,6 +91,11 @@
 
 ```json
 {
+  "request_status": {
+    "cache_hit": true,
+    "remaining_ai_requests": 4,
+    "cooldown_seconds": 0
+  },
   "catalog_item_count": 24,
   "selection": {
     "estimated_total": 4206,
@@ -99,6 +112,14 @@
   }
 }
 ```
+
+首页还应具备以下匿名保护交互：
+
+- 页面首次打开时静默获取匿名会话
+- 同一按钮连续点击时前端先做短时间防抖
+- 命中缓存时提示“已返回最近结果”
+- 命中冷却时显示剩余秒数
+- 命中挑战状态时跳转或弹出挑战组件
 
 ### 2. 型号词库列表页
 
