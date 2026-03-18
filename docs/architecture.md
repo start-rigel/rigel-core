@@ -7,12 +7,13 @@ Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 
 当前系统只围绕这条链路：
 
-1. `rigel-jd-collector` 从京东联盟获取原始商品与价格
-2. 原始商品进入 PostgreSQL
-3. `rigel-build-engine` 将原始标题整理成型号级价格清单
-4. `rigel-build-engine` 接收来自界面的用户参数
-5. `rigel-build-engine` 组织 `用户需求 + 价格清单` 请求 AI API
-6. `rigel-console` 展示推荐结果
+1. 页面维护型号词库，支持 Excel 导入导出
+2. `rigel-jd-collector` 从京东联盟获取原始商品与价格
+3. 原始商品进入 PostgreSQL
+4. `rigel-build-engine` 将原始标题整理成型号级价格清单
+5. `rigel-build-engine` 接收来自界面的用户参数
+6. `rigel-build-engine` 组织 `用户需求 + 价格清单` 请求 AI API
+7. `rigel-console` 展示推荐结果
 
 ## 服务边界
 
@@ -20,6 +21,7 @@ Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 
 负责：
 
+- 消费已维护的型号词库
 - 京东联盟/OpenAPI 调用
 - 原始商品查询
 - 原始价格快照入库
@@ -51,6 +53,7 @@ Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 负责：
 
 - 最小页面入口
+- 型号词库页面管理
 - 接收用户输入
 - 调用 `rigel-build-engine`
 - 展示 AI 返回结果
@@ -72,6 +75,16 @@ Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 - `DDR5 6000 32G -> 499`
 
 AI 消费的是这份清单，而不是原始商品明细。
+
+## 当前正式使用的京东联盟接口
+
+- `jd.union.open.goods.query`
+- `jd.union.open.goods.promotiongoodsinfo.query`
+- `jd.union.open.category.goods.get`
+
+未来返佣链接预留：
+
+- `jd.union.open.promotion.common.get`
 
 ## 当前明确不做
 

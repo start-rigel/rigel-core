@@ -50,8 +50,9 @@ Rigel 当前要做的是一个最小可用的电脑配置推荐系统。
 职责：
 
 - 调用京东联盟接口搜索商品
-- 维护按关键词查询得到的原始商品数据
+- 读取已维护的型号词库
 - 保存原始商品与价格快照
+- 为后续价格清单整理提供原始数据
 
 不负责：
 
@@ -83,11 +84,47 @@ Rigel 当前要做的是一个最小可用的电脑配置推荐系统。
 - 接收用户输入
 - 调用 `rigel-build-engine`
 - 展示推荐结果
+- 提供型号词库的页面管理入口
 
 不负责：
 
 - 直接做数据抓取
 - 直接做核心分析决策
+
+## 型号词库规范
+
+型号词库是当前 JD 搜索的唯一关键词来源。
+
+维护方式：
+
+- 页面手动新增/编辑
+- Excel 批量导入
+- Excel 批量导出
+- 启用/停用
+
+当前不使用 CSV 或 JSON 作为业务侧批量导入格式。
+
+### 词库字段
+
+- `category`
+- `keyword`
+- `canonical_model`
+- `brand`
+- `aliases`
+- `priority`
+- `enabled`
+- `notes`
+
+### 当前类别枚举
+
+- `cpu`
+- `gpu`
+- `motherboard`
+- `ram`
+- `ssd`
+- `psu`
+- `case`
+- `cooler`
 
 ## AI 输入规范
 
@@ -225,16 +262,110 @@ AI 必须返回结构化结果：
 - `price`
 - `reason`
 
+## 京东联盟接口规范
+
+当前 JD 模块正式采用以下接口：
+
+### 1. `jd.union.open.goods.query`
+
+用途：
+
+- 按型号关键词搜索商品
+- 作为原始商品采集主入口
+
+当前至少要获取：
+
+- `skuId`
+- `title`
+- `product_url`
+- `image_url`
+- `price`
+- `shop_name`
+- `brand_name`
+- `category_info`
+- `commission_rate`
+- `is_promotable`
+- `coupon_info`
+- `raw_payload`
+
+### 2. `jd.union.open.goods.promotiongoodsinfo.query`
+
+用途：
+
+- 按 `skuId` 补商品详情和推广信息
+- 补全搜索结果里的关键字段
+
+当前至少要获取：
+
+- `skuId`
+- `title`
+- `product_url`
+- `image_url`
+- `price`
+- `commission_rate`
+- `coupon_info`
+- `promotion_status`
+- `raw_payload`
+
+### 3. `jd.union.open.category.goods.get`
+
+用途：
+
+- 获取商品类目树
+- 支撑词库分类和页面筛选
+
+当前至少要获取：
+
+- `category_id`
+- `category_name`
+- `parent_category_id`
+- `level`
+- `raw_payload`
+
+### 4. 预留：`jd.union.open.promotion.common.get`
+
+用途：
+
+- 生成推广链接
+
+当前阶段：
+
+- 第一版先不做页面返佣链接功能
+- 但商品层和配置层要为它预留字段
+
+## 统一表结构命名
+
+所有业务表统一使用 `rigel_` 前缀。
+
+当前第一版核心表：
+
+- `rigel_keyword_seeds`
+- `rigel_products`
+- `rigel_price_snapshots`
+- `rigel_product_part_mapping`
+- `rigel_part_market_summary`
+- `rigel_jobs`
+
+### 表职责
+
+- `rigel_keyword_seeds`: 型号词库与 Excel 导入结果
+- `rigel_products`: 京东原始商品
+- `rigel_price_snapshots`: 价格快照
+- `rigel_product_part_mapping`: 原始商品到标准型号映射
+- `rigel_part_market_summary`: 型号级价格清单汇总
+- `rigel_jobs`: 采集、导入、汇总任务记录
+
 ## 当前最小可交付
 
 第一版只要求稳定完成这件事：
 
-1. 京东联盟拿到商品与价格
-2. 数据入库
-3. build-engine 整理出型号级价格清单
-4. console 接收预算和用途
-5. build-engine 请求 AI 并返回结构化推荐
-6. 页面展示结果
+1. Excel 导入型号词库
+2. 京东联盟拿到商品与价格
+3. 数据入库
+4. build-engine 整理出型号级价格清单
+5. console 接收预算和用途
+6. build-engine 请求 AI 并返回结构化推荐
+7. 页面展示结果
 
 ## Workspace Layout
 
