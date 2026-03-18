@@ -384,7 +384,9 @@ rigel/
 │   │   ├── database-schema.md
 │   │   ├── excel-template.md
 │   │   ├── jd-field-mapping.md
-│   │   └── api-contract.md
+│   │   ├── api-contract.md
+│   │   ├── pages.md
+│   │   └── backend-apis.md
 │   └── 电脑配置平台项目方案文档.md
 ├── rigel-build-engine/
 ├── rigel-console/
@@ -399,6 +401,8 @@ rigel/
 - Excel 模板规范：`docs/excel-template.md`
 - 京东字段映射：`docs/jd-field-mapping.md`
 - API 契约：`docs/api-contract.md`
+- 页面清单：`docs/pages.md`
+- 后端接口清单：`docs/backend-apis.md`
 
 ## 强约束
 
