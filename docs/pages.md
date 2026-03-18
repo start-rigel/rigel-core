@@ -1,6 +1,6 @@
 # 页面清单
 
-本文档定义当前第一版产品需要有哪些页面，以及每个页面的职责。
+本文档定义当前第一版产品需要有哪些页面，以及每个页面的职责、依赖接口和返回结果。
 
 ## 页面目标
 
@@ -15,7 +15,7 @@
 
 ### 1. 推荐首页
 
-路径建议：
+路径：
 
 - `/`
 
@@ -25,7 +25,7 @@
 - 提交推荐请求
 - 展示结构化推荐结果
 
-页面字段建议：
+页面字段：
 
 - `budget`
 - `usage`
@@ -34,18 +34,22 @@
 - `special_requirements`
 - `notes`
 
-页面展示内容建议：
+提交接口：
 
-- 推荐摘要 `summary`
-- 推荐配件列表 `parts`
-- 总价 `total_price`
-- 推荐理由 `reasoning`
-- 备选说明 `alternatives`
-- 风险提示 `warnings`
+- `POST /catalog/recommend`
+
+结果展示字段：
+
+- `summary`
+- `parts`
+- `total_price`
+- `reasoning`
+- `alternatives`
+- `warnings`
 
 ### 2. 型号词库列表页
 
-路径建议：
+路径：
 
 - `/keywords`
 
@@ -56,9 +60,22 @@
 - 按品牌筛选
 - 搜索关键词
 - 启用/停用词条
+- 进入新增页、编辑页、导入页
+- 触发导出
 
-页面展示字段建议：
+读取接口：
 
+- `GET /api/v1/keyword-seeds`
+
+操作接口：
+
+- `POST /api/v1/keyword-seeds/{id}/enable`
+- `POST /api/v1/keyword-seeds/{id}/disable`
+- `GET /api/v1/keyword-seeds/export`
+
+页面展示字段：
+
+- `id`
 - `category`
 - `keyword`
 - `canonical_model`
@@ -69,17 +86,19 @@
 - `notes`
 - `updated_at`
 
-### 3. 型号词库新增/编辑页
+### 3. 型号词库新增页
 
-路径建议：
+路径：
 
 - `/keywords/new`
-- `/keywords/{id}/edit`
 
 页面职责：
 
 - 新增词条
-- 编辑词条
+
+提交接口：
+
+- `POST /api/v1/keyword-seeds`
 
 表单字段：
 
@@ -92,9 +111,39 @@
 - `enabled`
 - `notes`
 
-### 4. Excel 导入页
+### 4. 型号词库编辑页
 
-路径建议：
+路径：
+
+- `/keywords/{id}/edit`
+
+页面职责：
+
+- 加载单个词条
+- 编辑词条
+
+读取接口：
+
+- `GET /api/v1/keyword-seeds/{id}`
+
+提交接口：
+
+- `PUT /api/v1/keyword-seeds/{id}`
+
+表单字段：
+
+- `category`
+- `keyword`
+- `canonical_model`
+- `brand`
+- `aliases`
+- `priority`
+- `enabled`
+- `notes`
+
+### 5. Excel 导入页
+
+路径：
 
 - `/keywords/import`
 
@@ -103,6 +152,12 @@
 - 上传 Excel 文件
 - 查看导入结果
 - 查看错误明细
+- 下载模板
+
+接口：
+
+- `POST /api/v1/keyword-seeds/import`
+- `GET /api/v1/keyword-seeds/template`
 
 页面功能：
 
@@ -111,10 +166,11 @@
 - 展示导入成功数
 - 展示导入失败数
 - 展示错误行与错误原因
+- 展示导入生成的 `job_id`
 
-### 5. Excel 导出页或导出动作
+### 6. Excel 导出动作
 
-路径建议：
+路径：
 
 - `/keywords/export`
 
@@ -122,7 +178,21 @@
 
 - 导出当前词库为 Excel
 
+接口：
+
+- `GET /api/v1/keyword-seeds/export`
+
 第一版可以不单独做页面，允许在词库列表页提供一个导出按钮。
+
+## 页面与接口对应关系
+
+| 页面 | 读取接口 | 操作接口 |
+|---|---|---|
+| `/` | 无 | `POST /catalog/recommend` |
+| `/keywords` | `GET /api/v1/keyword-seeds` | `POST /api/v1/keyword-seeds/{id}/enable` `POST /api/v1/keyword-seeds/{id}/disable` `GET /api/v1/keyword-seeds/export` |
+| `/keywords/new` | 无 | `POST /api/v1/keyword-seeds` |
+| `/keywords/{id}/edit` | `GET /api/v1/keyword-seeds/{id}` | `PUT /api/v1/keyword-seeds/{id}` |
+| `/keywords/import` | 无 | `POST /api/v1/keyword-seeds/import` `GET /api/v1/keyword-seeds/template` |
 
 ## 当前不做的页面
 
@@ -141,7 +211,8 @@
 
 - 推荐首页
 - 型号词库列表页
-- 型号词库新增/编辑页
+- 型号词库新增页
+- 型号词库编辑页
 - Excel 导入功能
 - Excel 导出功能
 

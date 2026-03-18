@@ -2,7 +2,96 @@
 
 本文档定义当前前后端与核心服务之间的主要字段约定。
 
-## 1. 词库导入接口
+## 1. 词库列表接口
+
+### 请求示例
+
+```json
+{
+  "category": "cpu",
+  "brand": "AMD",
+  "keyword": "7500F",
+  "enabled": true,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 响应示例
+
+```json
+{
+  "items": [
+    {
+      "id": "seed-1",
+      "category": "cpu",
+      "keyword": "Ryzen 5 7500F",
+      "canonical_model": "Ryzen 5 7500F",
+      "brand": "AMD",
+      "aliases": ["7500F", "AMD 7500F"],
+      "priority": 100,
+      "enabled": true,
+      "notes": "主流游戏 CPU",
+      "updated_at": "2026-03-18T10:00:00+08:00"
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 1
+}
+```
+
+## 2. 单个词条详情接口
+
+### 响应示例
+
+```json
+{
+  "id": "seed-1",
+  "category": "cpu",
+  "keyword": "Ryzen 5 7500F",
+  "canonical_model": "Ryzen 5 7500F",
+  "brand": "AMD",
+  "aliases": ["7500F", "AMD 7500F"],
+  "priority": 100,
+  "enabled": true,
+  "notes": "主流游戏 CPU",
+  "created_at": "2026-03-18T09:00:00+08:00",
+  "updated_at": "2026-03-18T10:00:00+08:00"
+}
+```
+
+## 3. 新增或编辑词条接口
+
+### 请求体
+
+```json
+{
+  "category": "cpu",
+  "keyword": "Ryzen 5 7500F",
+  "canonical_model": "Ryzen 5 7500F",
+  "brand": "AMD",
+  "aliases": ["7500F", "AMD 7500F"],
+  "priority": 100,
+  "enabled": true,
+  "notes": "主流游戏 CPU"
+}
+```
+
+### 字段说明
+
+| 字段 | 必填 | 说明 |
+|---|---|---|
+| `category` | 是 | 配件类别 |
+| `keyword` | 是 | 主搜索词 |
+| `canonical_model` | 是 | 标准型号名 |
+| `brand` | 否 | 品牌 |
+| `aliases` | 否 | 别名数组 |
+| `priority` | 否 | 采集优先级 |
+| `enabled` | 是 | 是否启用 |
+| `notes` | 否 | 备注 |
+
+## 4. 词库导入接口
 
 当前目标：
 
@@ -35,7 +124,7 @@
 }
 ```
 
-## 2. console -> build-engine 推荐请求
+## 5. console -> build-engine 推荐请求
 
 ### 请求体
 
@@ -64,7 +153,7 @@
 | `special_requirements` | 否 | 特殊要求 |
 | `notes` | 否 | 补充说明 |
 
-## 3. build-engine 内部 AI 输入
+## 6. build-engine 内部 AI 输入
 
 ### 请求体
 
@@ -109,7 +198,7 @@
 }
 ```
 
-## 4. build-engine -> console 推荐响应
+## 7. build-engine -> console 推荐响应
 
 ### 响应体
 

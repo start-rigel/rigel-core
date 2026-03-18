@@ -72,7 +72,7 @@
   - 调用 build-engine
   - 返回推荐结果
 
-### 当前必须提供的词库页面接口
+### 当前必须提供的页面路由
 
 - `GET /keywords`
   - 词库列表页
@@ -88,14 +88,11 @@
 
 ### 当前必须提供的词库 API
 
-- `POST /api/v1/keyword-seeds/import`
-  - 上传 Excel 并导入词库
-
-- `GET /api/v1/keyword-seeds/export`
-  - 导出词库 Excel
-
 - `GET /api/v1/keyword-seeds`
   - 获取词库列表
+
+- `GET /api/v1/keyword-seeds/{id}`
+  - 获取单个词条详情
 
 - `POST /api/v1/keyword-seeds`
   - 新增词条
@@ -108,6 +105,25 @@
 
 - `POST /api/v1/keyword-seeds/{id}/disable`
   - 停用词条
+
+- `POST /api/v1/keyword-seeds/import`
+  - 上传 Excel 并导入词库
+
+- `GET /api/v1/keyword-seeds/template`
+  - 下载 Excel 模板
+
+- `GET /api/v1/keyword-seeds/export`
+  - 导出词库 Excel
+
+## 页面与 console 接口对应
+
+| 页面 | 读取接口 | 操作接口 |
+|---|---|---|
+| `/` | 无 | `POST /catalog/recommend` |
+| `/keywords` | `GET /api/v1/keyword-seeds` | `POST /api/v1/keyword-seeds/{id}/enable` `POST /api/v1/keyword-seeds/{id}/disable` `GET /api/v1/keyword-seeds/export` |
+| `/keywords/new` | 无 | `POST /api/v1/keyword-seeds` |
+| `/keywords/{id}/edit` | `GET /api/v1/keyword-seeds/{id}` | `PUT /api/v1/keyword-seeds/{id}` |
+| `/keywords/import` | 无 | `POST /api/v1/keyword-seeds/import` `GET /api/v1/keyword-seeds/template` |
 
 ## 接口优先级
 
@@ -131,7 +147,9 @@
 - `GET /`
 - `POST /catalog/recommend`
 - `GET /api/v1/keyword-seeds`
+- `GET /api/v1/keyword-seeds/{id}`
 - `POST /api/v1/keyword-seeds/import`
+- `GET /api/v1/keyword-seeds/template`
 - `GET /api/v1/keyword-seeds/export`
 - `POST /api/v1/keyword-seeds`
 - `PUT /api/v1/keyword-seeds/{id}`
