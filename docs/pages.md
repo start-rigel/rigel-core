@@ -6,10 +6,10 @@
 
 当前页面只服务于两件事情：
 
-1. 维护型号词库
-2. 提交推荐请求并查看结果
+1. 前台用户提交推荐请求并查看结果
+2. 后台管理员维护型号词库
 
-当前不做复杂后台系统，不做运营面板，不做多角色权限系统。
+当前不做复杂运营面板，不做多角色权限系统。
 
 当前站点与前端统一要求：
 
@@ -18,10 +18,12 @@
 - 语言切换由前端本地状态控制，默认不依赖后端单独提供国际化接口
 - 用户默认无需登录即可直接使用推荐功能
 - 对高成本 AI 请求采用匿名配额、缓存复用与风险挑战，不增加默认注册门槛
+- 后台管理页面必须登录后访问
+- 前台用户页面与后台管理页面不能混在同一个导航入口
 
 ## 页面列表
 
-### 1. 推荐首页
+### 1. 前台推荐首页
 
 路径：
 
@@ -121,11 +123,33 @@
 - 命中冷却时显示剩余秒数
 - 命中挑战状态时跳转或弹出挑战组件
 
-### 2. 型号词库列表页
+### 2. 后台登录页
 
 路径：
 
-- `/keywords`
+- `/admin/login`
+
+页面职责：
+
+- 接收后台管理员账号密码
+- 建立后台登录态
+- 拒绝匿名访问后台管理页
+
+提交接口：
+
+- `POST /admin/login`
+
+登录成功后跳转：
+
+- `/admin`
+
+### 3. 型号词库列表页
+
+该页面属于后台管理页面，必须登录后访问。
+
+路径：
+
+- `/admin/keywords`
 
 页面职责：
 
@@ -140,13 +164,13 @@
 
 读取接口：
 
-- `GET /api/v1/keyword-seeds`
+- `GET /admin/api/v1/keyword-seeds`
 
 操作接口：
 
-- `POST /api/v1/keyword-seeds/{id}/enable`
-- `POST /api/v1/keyword-seeds/{id}/disable`
-- `GET /api/v1/keyword-seeds/export`
+- `POST /admin/api/v1/keyword-seeds/{id}/enable`
+- `POST /admin/api/v1/keyword-seeds/{id}/disable`
+- `GET /admin/api/v1/keyword-seeds/export`
 
 页面展示字段：
 
@@ -168,11 +192,13 @@
 | seed-1 | cpu | Ryzen 5 7500F | Ryzen 5 7500F | AMD | true | 2026-03-18T10:00:00+08:00 |
 | seed-2 | gpu | RTX 4060 | RTX 4060 | NVIDIA | true | 2026-03-18T10:00:00+08:00 |
 
-### 3. 型号词库新增页
+### 4. 型号词库新增页
+
+该页面属于后台管理页面，必须登录后访问。
 
 路径：
 
-- `/keywords/new`
+- `/admin/keywords/new`
 
 页面职责：
 
@@ -181,7 +207,7 @@
 
 提交接口：
 
-- `POST /api/v1/keyword-seeds`
+- `POST /admin/api/v1/keyword-seeds`
 
 表单字段：
 
@@ -209,11 +235,13 @@
 }
 ```
 
-### 4. 型号词库编辑页
+### 5. 型号词库编辑页
+
+该页面属于后台管理页面，必须登录后访问。
 
 路径：
 
-- `/keywords/{id}/edit`
+- `/admin/keywords/{id}/edit`
 
 页面职责：
 
@@ -223,11 +251,11 @@
 
 读取接口：
 
-- `GET /api/v1/keyword-seeds/{id}`
+- `GET /admin/api/v1/keyword-seeds/{id}`
 
 提交接口：
 
-- `PUT /api/v1/keyword-seeds/{id}`
+- `PUT /admin/api/v1/keyword-seeds/{id}`
 
 表单字段：
 
@@ -242,16 +270,18 @@
 
 示例编辑流程：
 
-1. 打开 `/keywords/seed-1/edit`
-2. 页面先请求 `GET /api/v1/keyword-seeds/seed-1`
+1. 打开 `/admin/keywords/seed-1/edit`
+2. 页面先请求 `GET /admin/api/v1/keyword-seeds/seed-1`
 3. 用户把 `priority` 从 `90` 改到 `100`
-4. 提交 `PUT /api/v1/keyword-seeds/seed-1`
+4. 提交 `PUT /admin/api/v1/keyword-seeds/seed-1`
 
-### 5. Excel 导入页
+### 6. Excel 导入页
+
+该页面属于后台管理页面，必须登录后访问。
 
 路径：
 
-- `/keywords/import`
+- `/admin/keywords/import`
 
 页面职责：
 
@@ -263,8 +293,8 @@
 
 接口：
 
-- `POST /api/v1/keyword-seeds/import`
-- `GET /api/v1/keyword-seeds/template`
+- `POST /admin/api/v1/keyword-seeds/import`
+- `GET /admin/api/v1/keyword-seeds/template`
 
 页面功能：
 

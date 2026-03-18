@@ -28,6 +28,17 @@
 
 当前不允许前端直接持有 AI token，也不允许前端绕过 `rigel-console` 直接请求 AI。
 
+## 后台管理访问规则
+
+后台管理接口不属于匿名能力。
+凡是涉及词库维护、导入导出、采集触发、系统配置的接口，当前都必须满足：
+
+- 必须登录后访问
+- 必须与前台推荐接口分组隔离
+- 默认不对匿名用户开放
+
+当前建议后台路由统一使用 `/admin` 前缀，后台 API 统一使用 `/admin/api/v1` 前缀。
+
 ## 1. rigel-jd-collector
 
 ### 当前必须接口
@@ -137,6 +148,15 @@ curl -X POST http://localhost:18082/api/v1/advice/catalog \
   - 调用 build-engine
   - 返回推荐结果
 
+- `GET /admin/login`
+  - 后台登录页
+
+- `POST /admin/login`
+  - 提交后台登录凭证
+
+- `POST /admin/logout`
+  - 退出后台登录态
+
 ### 请求示例
 
 ```bash
@@ -155,6 +175,12 @@ curl -X POST http://localhost:18084/catalog/recommend \
     },
     "special_requirements": ["wifi_motherboard"],
     "notes": "1080p 游戏为主"
+  }'
+curl -X POST http://localhost:18084/admin/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "******"
   }'
 ```
 
@@ -210,45 +236,51 @@ curl -X POST http://localhost:18084/catalog/recommend \
 
 ### 当前必须提供的页面路由
 
-- `GET /keywords`
+- `GET /admin/login`
+  - 后台登录页
+
+- `GET /admin`
+  - 后台首页
+
+- `GET /admin/keywords`
   - 词库列表页
 
-- `GET /keywords/new`
+- `GET /admin/keywords/new`
   - 新增词条页
 
-- `GET /keywords/{id}/edit`
+- `GET /admin/keywords/{id}/edit`
   - 编辑词条页
 
-- `GET /keywords/import`
+- `GET /admin/keywords/import`
   - Excel 导入页
 
 ### 当前必须提供的词库 API
 
-- `GET /api/v1/keyword-seeds`
+- `GET /admin/api/v1/keyword-seeds`
   - 获取词库列表
 
-- `GET /api/v1/keyword-seeds/{id}`
+- `GET /admin/api/v1/keyword-seeds/{id}`
   - 获取单个词条详情
 
-- `POST /api/v1/keyword-seeds`
+- `POST /admin/api/v1/keyword-seeds`
   - 新增词条
 
-- `PUT /api/v1/keyword-seeds/{id}`
+- `PUT /admin/api/v1/keyword-seeds/{id}`
   - 编辑词条
 
-- `POST /api/v1/keyword-seeds/{id}/enable`
+- `POST /admin/api/v1/keyword-seeds/{id}/enable`
   - 启用词条
 
-- `POST /api/v1/keyword-seeds/{id}/disable`
+- `POST /admin/api/v1/keyword-seeds/{id}/disable`
   - 停用词条
 
-- `POST /api/v1/keyword-seeds/import`
+- `POST /admin/api/v1/keyword-seeds/import`
   - 上传 Excel 并导入词库
 
-- `GET /api/v1/keyword-seeds/template`
+- `GET /admin/api/v1/keyword-seeds/template`
   - 下载 Excel 模板
 
-- `GET /api/v1/keyword-seeds/export`
+- `GET /admin/api/v1/keyword-seeds/export`
   - 导出词库 Excel
 
 ## 页面与 console 接口对应
@@ -256,10 +288,11 @@ curl -X POST http://localhost:18084/catalog/recommend \
 | 页面 | 读取接口 | 操作接口 |
 |---|---|---|
 | `/` | `GET /api/v1/session/anonymous` | `POST /catalog/recommend` |
-| `/keywords` | `GET /api/v1/keyword-seeds` | `POST /api/v1/keyword-seeds/{id}/enable` `POST /api/v1/keyword-seeds/{id}/disable` `GET /api/v1/keyword-seeds/export` |
-| `/keywords/new` | 无 | `POST /api/v1/keyword-seeds` |
-| `/keywords/{id}/edit` | `GET /api/v1/keyword-seeds/{id}` | `PUT /api/v1/keyword-seeds/{id}` |
-| `/keywords/import` | 无 | `POST /api/v1/keyword-seeds/import` `GET /api/v1/keyword-seeds/template` |
+| `/admin/login` | 无 | `POST /admin/login` |
+| `/admin/keywords` | `GET /admin/api/v1/keyword-seeds` | `POST /admin/api/v1/keyword-seeds/{id}/enable` `POST /admin/api/v1/keyword-seeds/{id}/disable` `GET /admin/api/v1/keyword-seeds/export` |
+| `/admin/keywords/new` | 无 | `POST /admin/api/v1/keyword-seeds` |
+| `/admin/keywords/{id}/edit` | `GET /admin/api/v1/keyword-seeds/{id}` | `PUT /admin/api/v1/keyword-seeds/{id}` |
+| `/admin/keywords/import` | 无 | `POST /admin/api/v1/keyword-seeds/import` `GET /admin/api/v1/keyword-seeds/template` |
 
 ## 当前返回示例摘要
 
