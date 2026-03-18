@@ -1,43 +1,85 @@
 # Rigel Architecture
 
-## Core Pipeline
+## 当前系统定义
 
-Rigel should be understood as a daily market-data pipeline with an AI recommendation layer on top.
+Rigel 当前不是一个复杂的硬件专家系统。
+Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 
-1. `rigel-jd-collector` queries JD Union/OpenAPI for raw JD product samples
-2. raw titles and prices are stored as platform records
-3. `rigel-build-engine` maps raw samples into canonical part models
-4. `rigel-build-engine` aggregates daily model prices
-5. `rigel-build-engine` accepts UI parameters, organizes the structured catalog, and requests AI API analysis
-6. `rigel-console` exposes the result
+当前系统只围绕这条链路：
 
-## Service Boundaries
+1. `rigel-jd-collector` 从京东联盟获取原始商品与价格
+2. 原始商品进入 PostgreSQL
+3. `rigel-build-engine` 将原始标题整理成型号级价格清单
+4. `rigel-build-engine` 接收来自界面的用户参数
+5. `rigel-build-engine` 组织 `用户需求 + 价格清单` 请求 AI API
+6. `rigel-console` 展示推荐结果
 
-- `rigel-jd-collector` owns JD Union/OpenAPI integration details and persistence.
-- `rigel-build-engine` owns canonical model mapping, daily price aggregation, and AI analysis request assembly.
-- `rigel-build-engine` currently owns the aggregation layer and the AI analysis request/response layer.
-- `rigel-console` is a thin API/UI shell and should not own pricing or analysis logic.
+## 服务边界
 
-## Current Design Principle
+### `rigel-jd-collector`
 
-The project is not currently optimizing for a heavy expert-system build engine.
-The project is optimizing for a reliable daily price catalog that AI can use.
+负责：
 
-That means the most important structured output is:
+- 京东联盟/OpenAPI 调用
+- 原始商品查询
+- 原始价格快照入库
 
-- date
-- platform
-- canonical model
-- sample count
-- avg price
-- median price
-- p25
-- p75
+不负责：
 
-## Phase 1 Output
+- 价格清单整理
+- AI 分析
+- 页面展示
 
-Phase 1 should be able to answer this question reliably:
+### `rigel-build-engine`
 
-- given `6000 RMB` and `gaming`, what parts does AI recommend based on today's aggregated JD price catalog?
+负责：
 
-The current active scope uses JD as the primary collection source.
+- 接收用户需求参数
+- 整理原始硬件信息
+- 形成型号级价格清单
+- 构造 AI 输入
+- 请求 AI API
+- 返回结构化推荐结果
+
+不负责：
+
+- 直接抓取外部平台
+- 承担前端界面
+
+### `rigel-console`
+
+负责：
+
+- 最小页面入口
+- 接收用户输入
+- 调用 `rigel-build-engine`
+- 展示 AI 返回结果
+
+不负责：
+
+- 数据抓取
+- 数据聚合
+- AI 决策
+
+## 当前最重要的数据产物
+
+当前最重要的数据不是抓取页面，也不是后台列表。
+当前最重要的数据产物是型号级价格清单，例如：
+
+- `Ryzen 5 7500F -> 899`
+- `RTX 4060 -> 2399`
+- `B650M -> 699`
+- `DDR5 6000 32G -> 499`
+
+AI 消费的是这份清单，而不是原始商品明细。
+
+## 当前明确不做
+
+当前架构范围内，不做：
+
+- 闲鱼接入
+- 浏览器抓取京东
+- 独立 AI 服务
+- 重型兼容规则引擎
+- 多数据源联合推荐
+- 复杂后台系统

@@ -1,48 +1,92 @@
 # Database Schema
 
-This document describes the current schema direction for Rigel.
+当前数据库设计只服务于这条主链路：
 
-## Primary Data Shape
+`京东原始商品 -> 型号级价格信息 -> AI 推荐`
 
-The most important records in the system are:
+## 当前核心数据对象
 
-- raw platform products
-- raw price snapshots
-- canonical parts / canonical models
-- raw-to-canonical mappings
-- daily aggregated market summaries
+### 1. 原始商品
 
-The schema should support this daily flow:
+来源：京东联盟接口。
 
-1. store raw JD Union product samples
-2. append price snapshots
-3. map raw products to canonical part models
-4. aggregate per-day prices per canonical model
-5. provide an AI-ready price catalog
+用途：
 
-## Ownership
+- 保存原始标题
+- 保存原始价格
+- 作为后续型号整理的输入
 
-- `rigel-jd-collector`: queries JD Union/OpenAPI and writes `products`, `price_snapshots`, `jobs`
-- `rigel-build-engine`: owns canonical `parts`, `product_part_mapping`, `part_market_summary`
-- `rigel-build-engine`: also owns AI request payload generation from structured catalog data and recommendation response assembly
-- `rigel-console`: orchestrates through service APIs
+对应表：
 
-## Table Intent
+- `products`
+- `price_snapshots`
 
-- `parts`: canonical hardware part catalog and canonical model keys
-- `products`: raw platform product records from JD
-- `product_part_mapping`: normalized mapping from raw product to canonical part/model
-- `price_snapshots`: append-only captured price history
-- `part_market_summary`: daily aggregated market data by canonical part and platform
-- `jobs`: collection and processing task records
+### 2. 型号级映射
 
-## Current Direction Change
+用途：
 
-Compared with the earlier design, the center of gravity is now:
+- 将原始商品标题整理为型号级信息
+- 为价格清单提供统一名称
 
-- less emphasis on rich spec modeling
-- less emphasis on complex scoring profiles
-- more emphasis on daily per-model price aggregation
-- more emphasis on AI-ready catalog output
+对应表：
 
-Legacy build-request/result tables may still exist in the bootstrap SQL, but they are no longer part of the active module responsibility.
+- `parts`
+- `product_part_mapping`
+
+### 3. 型号级价格汇总
+
+用途：
+
+- 按型号输出当前参考价
+- 为 AI 提供 `price_catalog`
+
+对应表：
+
+- `part_market_summary`
+
+### 4. 任务记录
+
+用途：
+
+- 记录采集任务
+- 记录后续处理任务
+
+对应表：
+
+- `jobs`
+
+## 当前模块与表的职责归属
+
+- `rigel-jd-collector`
+  - `products`
+  - `price_snapshots`
+  - `jobs`
+
+- `rigel-build-engine`
+  - `parts`
+  - `product_part_mapping`
+  - `part_market_summary`
+
+- `rigel-console`
+  - 不直接拥有核心业务表
+  - 通过服务接口读取结果
+
+## 当前数据库设计重点
+
+当前重点不是复杂规格库。
+当前重点是：
+
+1. 能存原始商品
+2. 能存价格快照
+3. 能形成型号映射
+4. 能产出型号级价格清单
+
+## 当前不作为重点的旧设计
+
+以下方向当前不是核心：
+
+- 复杂兼容规则表
+- 复杂打分模板表
+- 大量 build request / build result 历史结构
+
+如果这些表还存在于 bootstrap SQL 中，它们属于历史遗留，不代表当前系统中心。
