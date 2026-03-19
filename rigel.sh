@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CORE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CORE_DIR="${SCRIPT_DIR}"
 
 DEFAULT_SERVICES=(
   postgres
@@ -16,13 +16,13 @@ DEFAULT_SERVICES=(
 usage() {
   cat <<'EOF'
 Usage:
-  ./scripts/rigel.sh up [service...]
-  ./scripts/rigel.sh start [service...]
-  ./scripts/rigel.sh down
-  ./scripts/rigel.sh restart [service...]
-  ./scripts/rigel.sh logs [service...]
-  ./scripts/rigel.sh ps
-  ./scripts/rigel.sh build [service...]
+  ./rigel.sh up [service...]
+  ./rigel.sh start [service...]
+  ./rigel.sh down
+  ./rigel.sh restart [service...]
+  ./rigel.sh logs [service...]
+  ./rigel.sh ps
+  ./rigel.sh build [service...]
 
 Default services:
   postgres redis rigel-jd-collector rigel-build-engine rigel-console

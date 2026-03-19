@@ -3,8 +3,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CORE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-CLI_SCRIPT="${SCRIPT_DIR}/rigel.sh"
+CORE_DIR="${SCRIPT_DIR}"
+CLI_SCRIPT="${CORE_DIR}/rigel.sh"
 
 ACTIONS=(
   "up-all|一键启动全部服务|直接构建并启动当前全部激活服务|0"
@@ -37,7 +37,7 @@ SERVICE_FLAGS=()
 usage() {
   cat <<'EOF'
 Usage:
-  ./scripts/rigel-tui.sh
+  ./rigel-tui.sh
 
 Keys:
   ↑/↓ or j/k  move
@@ -210,7 +210,7 @@ render_confirm_step() {
   local options=("执行" "返回上一步" "退出")
   draw_text 4 1 "第 3/3 步"
   draw_text 5 1 "确认后将直接执行命令"
-  local cmd="./scripts/rigel.sh ${ACTION_KEY}"
+  local cmd="./rigel.sh ${ACTION_KEY}"
   if [[ "${#SELECTED_SERVICES[@]}" -gt 0 ]]; then
     cmd+=" $(printf '%s ' "${SELECTED_SERVICES[@]}")"
   fi

@@ -171,13 +171,13 @@ rigel/
 
 ```bash
 cd /Users/mac-mini/work/private/rigel/rigel-core
-./scripts/rigel.sh up
+./rigel.sh up
 ```
 
 终端交互模式：
 
 ```bash
-./scripts/rigel-tui.sh
+./rigel-tui.sh
 ```
 
 支持：
@@ -196,11 +196,11 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 常用命令：
 
 ```bash
-./scripts/rigel.sh up
-./scripts/rigel.sh ps
-./scripts/rigel.sh logs rigel-console
-./scripts/rigel.sh restart rigel-build-engine
-./scripts/rigel.sh down
+./rigel.sh up
+./rigel.sh ps
+./rigel.sh logs rigel-console
+./rigel.sh restart rigel-build-engine
+./rigel.sh down
 ```
 
 脚本默认管理当前激活服务：
