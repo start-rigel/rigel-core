@@ -57,6 +57,7 @@ compose() {
 refresh_console_ui() {
   local console_dir="${CORE_DIR}/../rigel-console"
   local frontend_dir="${console_dir}/frontend"
+  local dist_dir="${console_dir}/internal/app/web/dist"
 
   require_tool npm
 
@@ -73,6 +74,14 @@ refresh_console_ui() {
   elif [[ ! -d "${frontend_dir}/node_modules" ]]; then
     echo "frontend dependencies missing, running npm install..."
     (cd "${frontend_dir}" && npm install)
+  fi
+
+  if [[ -d "${dist_dir}" ]] && [[ ! -w "${dist_dir}" || ! -w "${dist_dir}/assets" ]]; then
+    echo "fixing rigel-console dist permissions..."
+    docker run --rm \
+      -v "${dist_dir}:/target" \
+      alpine:3.20 \
+      sh -lc "chown -R $(id -u):$(id -g) /target && chmod -R u+rwX /target"
   fi
 
   echo "building rigel-console frontend..."
