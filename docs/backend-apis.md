@@ -371,15 +371,15 @@ curl -X POST http://localhost:18084/admin/login \
 - `GET /healthz`
 - `GET /`
 - `POST /catalog/recommend`
-- `GET /api/v1/keyword-seeds`
-- `GET /api/v1/keyword-seeds/{id}`
-- `POST /api/v1/keyword-seeds/import`
-- `GET /api/v1/keyword-seeds/template`
-- `GET /api/v1/keyword-seeds/export`
-- `POST /api/v1/keyword-seeds`
-- `PUT /api/v1/keyword-seeds/{id}`
-- `POST /api/v1/keyword-seeds/{id}/enable`
-- `POST /api/v1/keyword-seeds/{id}/disable`
+- `GET /admin/api/v1/keyword-seeds`
+- `GET /admin/api/v1/keyword-seeds/{id}`
+- `POST /admin/api/v1/keyword-seeds/import`
+- `GET /admin/api/v1/keyword-seeds/template`
+- `GET /admin/api/v1/keyword-seeds/export`
+- `POST /admin/api/v1/keyword-seeds`
+- `PUT /admin/api/v1/keyword-seeds/{id}`
+- `POST /admin/api/v1/keyword-seeds/{id}/enable`
+- `POST /admin/api/v1/keyword-seeds/{id}/disable`
 
 ### P1 后补
 

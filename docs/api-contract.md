@@ -6,12 +6,12 @@
 
 建议接口：
 
-- `GET /api/v1/keyword-seeds`
+- `GET /admin/api/v1/keyword-seeds`
 
 ### 请求示例
 
 ```text
-GET /api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page=1&page_size=20
+GET /admin/api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page=1&page_size=20
 ```
 
 ### 响应示例
@@ -42,7 +42,7 @@ GET /api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page
 
 建议接口：
 
-- `GET /api/v1/keyword-seeds/{id}`
+- `GET /admin/api/v1/keyword-seeds/{id}`
 
 ### 响应示例
 
@@ -66,8 +66,8 @@ GET /api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page
 
 建议接口：
 
-- `POST /api/v1/keyword-seeds`
-- `PUT /api/v1/keyword-seeds/{id}`
+- `POST /admin/api/v1/keyword-seeds`
+- `PUT /admin/api/v1/keyword-seeds/{id}`
 
 ### 请求体
 
@@ -117,7 +117,7 @@ GET /api/v1/keyword-seeds?category=cpu&brand=AMD&keyword=7500F&enabled=true&page
 HTTP 示例：
 
 ```bash
-curl -X POST http://localhost:18084/api/v1/keyword-seeds/import \
+curl -X POST http://localhost:18084/admin/api/v1/keyword-seeds/import \
   -F "file=@keyword_seeds.xlsx"
 ```
 

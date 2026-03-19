@@ -325,7 +325,7 @@
 
 路径：
 
-- `/keywords/export`
+- `/admin/keywords/export`
 
 页面职责：
 
@@ -333,7 +333,7 @@
 
 接口：
 
-- `GET /api/v1/keyword-seeds/export`
+- `GET /admin/api/v1/keyword-seeds/export`
 
 第一版可以不单独做页面，允许在词库列表页提供一个导出按钮。
 
@@ -342,10 +342,10 @@
 | 页面 | 读取接口 | 操作接口 |
 |---|---|---|
 | `/` | 无 | `POST /catalog/recommend` |
-| `/keywords` | `GET /api/v1/keyword-seeds` | `POST /api/v1/keyword-seeds/{id}/enable` `POST /api/v1/keyword-seeds/{id}/disable` `GET /api/v1/keyword-seeds/export` |
-| `/keywords/new` | 无 | `POST /api/v1/keyword-seeds` |
-| `/keywords/{id}/edit` | `GET /api/v1/keyword-seeds/{id}` | `PUT /api/v1/keyword-seeds/{id}` |
-| `/keywords/import` | 无 | `POST /api/v1/keyword-seeds/import` `GET /api/v1/keyword-seeds/template` |
+| `/admin/keywords` | `GET /admin/api/v1/keyword-seeds` | `POST /admin/api/v1/keyword-seeds/{id}/enable` `POST /admin/api/v1/keyword-seeds/{id}/disable` `GET /admin/api/v1/keyword-seeds/export` |
+| `/admin/keywords/new` | 无 | `POST /admin/api/v1/keyword-seeds` |
+| `/admin/keywords/{id}/edit` | `GET /admin/api/v1/keyword-seeds/{id}` | `PUT /admin/api/v1/keyword-seeds/{id}` |
+| `/admin/keywords/import` | 无 | `POST /admin/api/v1/keyword-seeds/import` `GET /admin/api/v1/keyword-seeds/template` |
 
 ## 当前不做的页面
 
