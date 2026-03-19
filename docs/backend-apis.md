@@ -99,7 +99,7 @@ curl "http://localhost:18081/api/v1/products?category=GPU&real_only=true&limit=2
   - 返回当前型号级价格清单
 
 - `POST /api/v1/advice/catalog`
-  - 接收 `user_request + price_catalog`
+  - 接收顶层用户需求字段和 `catalog.items` 价格目录
   - 返回结构化推荐结果
 
 ### 请求示例
