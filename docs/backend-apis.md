@@ -49,12 +49,6 @@
 - `POST /api/v1/collect/search`
   - 按关键词触发一次采集
 
-- `POST /api/v1/collect/by-seed`
-  - 按词库项触发一次采集
-
-- `POST /api/v1/collect/by-category`
-  - 按类别批量触发采集
-
 - `GET /api/v1/products`
   - 查询已采集的原始商品
 
@@ -71,21 +65,7 @@ curl -X POST http://localhost:18081/api/v1/collect/search \
     "limit": 2,
     "persist": true
   }'
-curl -X POST http://localhost:18081/api/v1/collect/by-seed \
-  -H "Content-Type: application/json" \
-  -d '{
-    "seed_id": "seed-1",
-    "limit": 2,
-    "persist": true
-  }'
-curl -X POST http://localhost:18081/api/v1/collect/by-category \
-  -H "Content-Type: application/json" \
-  -d '{
-    "category": "GPU",
-    "limit_per_seed": 1,
-    "persist": true
-  }'
-curl "http://localhost:18081/api/v1/products?category=GPU&real_only=true&limit=20"
+curl "http://localhost:18081/api/v1/products?category=GPU&self_operated_only=true&real_only=true&limit=20"
 ```
 
 ## 2. rigel-build-engine
@@ -301,7 +281,7 @@ curl -X POST http://localhost:18084/admin/login \
 ```json
 {
   "job_id": "job-1",
-  "mode": "mock",
+  "mode": "union",
   "persisted": true,
   "persisted_count": 2,
   "products": []
@@ -356,8 +336,6 @@ curl -X POST http://localhost:18084/admin/login \
 
 - `GET /healthz`
 - `POST /api/v1/collect/search`
-- `POST /api/v1/collect/by-seed`
-- `POST /api/v1/collect/by-category`
 - `GET /api/v1/products`
 
 #### rigel-build-engine
