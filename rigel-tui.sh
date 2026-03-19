@@ -9,6 +9,7 @@ CLI_SCRIPT="${CORE_DIR}/rigel.sh"
 ACTIONS=(
   "up-all|一键启动全部服务|直接构建并启动当前全部激活服务|0"
   "down-all|一键停止全部服务|直接停止当前全部激活服务|0"
+  "console-ui|刷新前台界面|自动构建 rigel-console 前端并重启服务|0"
   "up|打包并启动服务|执行 docker compose up -d --build|1"
   "start|启动已构建服务|执行 docker compose up -d|1"
   "restart|重建并重启服务|对选中服务重新构建并启动|1"

@@ -202,10 +202,24 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 ```bash
 ./rigel.sh up
 ./rigel.sh ps
+./rigel.sh console-ui
 ./rigel.sh logs rigel-console
 ./rigel.sh restart rigel-build-engine
 ./rigel.sh down
 ```
+
+前端界面更新快捷命令：
+
+```bash
+./rigel.sh console-ui
+```
+
+它会自动执行：
+
+1. 检查 `rigel-console/frontend` 依赖
+2. 必要时安装依赖
+3. 执行前端构建
+4. 重启 `rigel-console`
 
 脚本默认管理当前激活服务：
 

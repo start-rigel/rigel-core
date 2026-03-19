@@ -23,6 +23,7 @@ Usage:
   ./rigel.sh logs [service...]
   ./rigel.sh ps
   ./rigel.sh build [service...]
+  ./rigel.sh console-ui
 
 Default services:
   postgres redis rigel-jd-collector rigel-build-engine rigel-console
@@ -51,6 +52,34 @@ fi
 
 compose() {
   docker compose -f "${CORE_DIR}/docker-compose.yml" --env-file "${CORE_DIR}/.env" "$@"
+}
+
+refresh_console_ui() {
+  local console_dir="${CORE_DIR}/../rigel-console"
+  local frontend_dir="${console_dir}/frontend"
+
+  require_tool npm
+
+  if [[ ! -d "${frontend_dir}" ]]; then
+    echo "frontend directory not found: ${frontend_dir}" >&2
+    exit 1
+  fi
+
+  if [[ -f "${frontend_dir}/package-lock.json" ]]; then
+    if [[ ! -d "${frontend_dir}/node_modules" ]]; then
+      echo "frontend dependencies missing, running npm ci..."
+      (cd "${frontend_dir}" && npm ci)
+    fi
+  elif [[ ! -d "${frontend_dir}/node_modules" ]]; then
+    echo "frontend dependencies missing, running npm install..."
+    (cd "${frontend_dir}" && npm install)
+  fi
+
+  echo "building rigel-console frontend..."
+  (cd "${frontend_dir}" && npm run build)
+
+  echo "restarting rigel-console service..."
+  compose up -d --build rigel-console
 }
 
 command_name="${1:-up}"
@@ -85,6 +114,9 @@ case "${command_name}" in
     ;;
   build)
     compose build "${services[@]}"
+    ;;
+  console-ui)
+    refresh_console_ui
     ;;
   help|-h|--help)
     usage
