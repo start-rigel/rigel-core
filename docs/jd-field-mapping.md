@@ -31,15 +31,15 @@
 |---|---|---|---|
 | `skuId` | `external_id` | `rigel_products` | 京东商品唯一标识 |
 | `goodsName` / `skuName` / 标题字段 | `title` | `rigel_products` | 商品标题 |
-| `materialUrl` / 商品链接字段 | `product_url` | `rigel_products` | 商品落地页 |
+| `materialUrl` / 商品链接字段 | `url` | `rigel_products` | 商品落地页 |
 | `imageUrl` / 图片字段 | `image_url` | `rigel_products` | 商品主图 |
 | `price` / 单价字段 | `price` | `rigel_products` | 当前价格 |
-| `brandName` | `brand_name` | `rigel_products` | 品牌名 |
+| `brandName` | `attributes.brand_name` | `rigel_products` | 当前先存入扩展属性 |
 | `shopName` | `shop_name` | `rigel_products` | 店铺名 |
-| `categoryInfo` / 类目字段 | `category_name` | `rigel_products` | 可先做扁平化类目名 |
-| `commissionShare` / 佣金比例字段 | `commission_rate` | `rigel_products` | 返佣预留 |
-| `couponInfo` | `coupon_info` | `rigel_products` | 优惠信息 |
-| `isJdSale` / 可推广状态相关字段 | `is_promotable` | `rigel_products` | 先按布尔化处理 |
+| `categoryInfo` / 类目字段 | `attributes.category` | `rigel_products` | 当前先存入扩展属性 |
+| `commissionShare` / 佣金比例字段 | `attributes.commission_rate` | `rigel_products` | 返佣预留 |
+| `couponInfo` | `attributes.coupon_info` | `rigel_products` | 优惠信息 |
+| `isJdSale` / 可推广状态相关字段 | `attributes.is_promotable` | `rigel_products` | 先按布尔化处理 |
 | 整体响应对象 | `raw_payload` | `rigel_products` | 原始追溯 |
 
 示例上游对象：
@@ -71,15 +71,17 @@
   "source_platform": "jd",
   "external_id": "1001001",
   "title": "NVIDIA RTX 4060 8G 京东自营",
-  "product_url": "https://item.jd.com/1001001.html",
+  "url": "https://item.jd.com/1001001.html",
   "image_url": "https://img.example.com/4060.jpg",
   "price": 2399,
-  "brand_name": "NVIDIA",
   "shop_name": "京东自营",
-  "category_name": "显卡",
-  "commission_rate": 2.5,
-  "coupon_info": "满 2499 减 100",
-  "is_promotable": true
+  "attributes": {
+    "brand_name": "NVIDIA",
+    "category": "显卡",
+    "commission_rate": 2.5,
+    "coupon_info": "满 2499 减 100",
+    "is_promotable": true
+  }
 }
 ```
 
@@ -91,8 +93,9 @@
 |---|---|---|
 | 当前商品价格 | `price` | `rigel_price_snapshots` |
 | 当前采集时间 | `captured_at` | `rigel_price_snapshots` |
-| 固定 `CNY` | `currency` | `rigel_price_snapshots` |
-| 整体响应对象 | `raw_payload` | `rigel_price_snapshots` |
+| 固定 `jd` | `source_platform` | `rigel_price_snapshots` |
+| 是否有库存 | `in_stock` | `rigel_price_snapshots` |
+| 整体响应对象 | `metadata` | `rigel_price_snapshots` |
 
 价格快照示例：
 
@@ -101,7 +104,8 @@
   "product_id": "prod-1001001",
   "source_platform": "jd",
   "price": 2399,
-  "currency": "CNY",
+  "source_platform": "jd",
+  "in_stock": true,
   "captured_at": "2026-03-18T12:00:00Z"
 }
 ```
@@ -119,12 +123,12 @@
 |---|---|---|---|
 | `skuId` | `external_id` | `rigel_products` | 作为关联主键 |
 | 标题字段 | `title` | `rigel_products` | 可覆盖或补全 |
-| 商品链接字段 | `product_url` | `rigel_products` | 可覆盖或补全 |
+| 商品链接字段 | `url` | `rigel_products` | 可覆盖或补全 |
 | 图片字段 | `image_url` | `rigel_products` | 可覆盖或补全 |
 | 价格字段 | `price` | `rigel_products` | 刷新当前价格 |
-| 佣金比例字段 | `commission_rate` | `rigel_products` | 返佣预留 |
-| 优惠券字段 | `coupon_info` | `rigel_products` | 补全优惠信息 |
-| 推广状态字段 | `is_promotable` | `rigel_products` | 刷新可推广状态 |
+| 佣金比例字段 | `attributes.commission_rate` | `rigel_products` | 返佣预留 |
+| 优惠券字段 | `attributes.coupon_info` | `rigel_products` | 补全优惠信息 |
+| 推广状态字段 | `attributes.is_promotable` | `rigel_products` | 刷新可推广状态 |
 | 整体响应对象 | `raw_payload` | `rigel_products` | 原始追溯 |
 
 补全结果示例：
@@ -133,12 +137,14 @@
 {
   "external_id": "1001001",
   "title": "NVIDIA RTX 4060 8G 显卡",
-  "product_url": "https://item.jd.com/1001001.html",
+  "url": "https://item.jd.com/1001001.html",
   "image_url": "https://img.example.com/4060-detail.jpg",
   "price": 2359,
-  "commission_rate": 2.8,
-  "coupon_info": "满 2499 减 140",
-  "is_promotable": true
+  "attributes": {
+    "commission_rate": 2.8,
+    "coupon_info": "满 2499 减 140",
+    "is_promotable": true
+  }
 }
 ```
 
@@ -187,33 +193,38 @@
 
 ### `rigel_products`
 
-建议最少字段：
+当前核心字段：
 
 - `id`
 - `source_platform`
 - `external_id`
+- `sku_id`
 - `title`
-- `brand_name`
-- `shop_name`
-- `category_name`
-- `product_url`
+- `subtitle`
+- `url`
 - `image_url`
+- `shop_name`
+- `shop_type`
+- `seller_name`
+- `region`
 - `price`
-- `commission_rate`
-- `is_promotable`
-- `coupon_info`
+- `currency`
+- `availability`
+- `attributes`
 - `raw_payload`
+- `first_seen_at`
+- `last_seen_at`
 - `created_at`
 - `updated_at`
 
 ### `rigel_price_snapshots`
 
-建议最少字段：
+当前核心字段：
 
 - `id`
 - `product_id`
+- `source_platform`
 - `captured_at`
 - `price`
-- `currency`
-- `raw_payload`
-- `created_at`
+- `in_stock`
+- `metadata`

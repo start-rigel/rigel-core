@@ -32,103 +32,142 @@
 - `created_at`
 - `updated_at`
 
-### 2. `rigel_products`
+### 2. `rigel_parts`
+
+用途：
+
+- 存 build-engine 归一后的标准型号实体
+- 为价格汇总和推荐结果提供稳定主键
+
+当前字段：
+
+- `id`
+- `category`
+- `brand`
+- `series`
+- `model`
+- `display_name`
+- `normalized_key`
+- `generation`
+- `msrp`
+- `release_year`
+- `lifecycle_status`
+- `source_confidence`
+- `alias_keywords`
+- `created_at`
+- `updated_at`
+
+### 3. `rigel_products`
 
 用途：
 
 - 存京东联盟原始商品
 - 保留原始商品追溯信息
 
-建议字段：
+当前字段：
 
 - `id`
 - `source_platform`
 - `external_id`
+- `sku_id`
 - `title`
-- `brand_name`
-- `shop_name`
-- `category_name`
-- `product_url`
+- `subtitle`
+- `url`
 - `image_url`
+- `shop_name`
+- `shop_type`
+- `seller_name`
+- `region`
 - `price`
-- `commission_rate`
-- `is_promotable`
-- `coupon_info`
+- `currency`
+- `availability`
+- `attributes`
 - `raw_payload`
+- `first_seen_at`
+- `last_seen_at`
 - `created_at`
 - `updated_at`
 
-### 3. `rigel_price_snapshots`
+### 4. `rigel_price_snapshots`
 
 用途：
 
 - 存价格快照
 - 保留每日价格变化痕迹
 
-建议字段：
+当前字段：
 
 - `id`
 - `product_id`
+- `source_platform`
 - `captured_at`
 - `price`
-- `currency`
-- `raw_payload`
-- `created_at`
+- `in_stock`
+- `metadata`
 
-### 4. `rigel_product_part_mapping`
+### 5. `rigel_product_part_mapping`
 
 用途：
 
 - 将原始商品映射到标准型号
 
-建议字段：
+当前字段：
 
 - `id`
 - `product_id`
+- `part_id`
 - `keyword_seed_id`
-- `canonical_model`
+- `mapping_status`
 - `match_confidence`
-- `match_source`
+- `matched_by`
+- `candidate_display_name`
+- `reason`
 - `created_at`
 - `updated_at`
 
-### 5. `rigel_part_market_summary`
+### 6. `rigel_part_market_summary`
 
 用途：
 
 - 形成型号级价格清单
 - 为 AI 提供 `price_catalog`
 
-建议字段：
+当前字段：
 
 - `id`
-- `category`
-- `canonical_model`
+- `part_id`
 - `source_platform`
 - `sample_count`
-- `avg_price`
+- `latest_price`
 - `median_price`
+- `p25_price`
+- `p75_price`
 - `min_price`
 - `max_price`
-- `summary_date`
+- `window_days`
+- `last_collected_at`
 - `created_at`
 - `updated_at`
 
-### 6. `rigel_jobs`
+### 7. `rigel_jobs`
 
 用途：
 
 - 记录采集、导入、汇总任务
 
-建议字段：
+当前字段：
 
 - `id`
 - `job_type`
 - `status`
+- `source_platform`
 - `payload`
-- `result_summary`
+- `result`
+- `scheduled_at`
 - `started_at`
 - `finished_at`
+- `retry_count`
+- `error_message`
 - `created_at`
 - `updated_at`
 
@@ -140,7 +179,8 @@
   - `rigel_jobs`
 
 - `rigel-build-engine`
-  - `rigel_keyword_seeds` 的消费与映射使用
+  - `rigel_parts`
+  - `rigel_keyword_seeds` 的消费与映射预留
   - `rigel_product_part_mapping`
   - `rigel_part_market_summary`
 
@@ -156,16 +196,15 @@
 1. 能存型号词库
 2. 能存原始商品
 3. 能存价格快照
-4. 能形成型号映射
+4. 能形成标准型号实体与映射
 5. 能产出型号级价格清单
-6. 能为未来返佣链接预留商品基础字段
+6. 能为未来返佣链接预留原始 payload
 
 ## 当前不作为重点的旧设计
 
-以下方向当前不是核心：
+当前 bootstrap SQL 已经移除了旧的：
 
-- 复杂兼容规则表
-- 复杂打分模板表
-- 大量 build request / build result 历史结构
-
-如果这些表还存在于 bootstrap SQL 中，它们属于历史遗留，不代表当前系统中心。
+- 兼容规则表
+- 打分模板表
+- 旧 build request / build result 历史结构
+- 闲鱼 / 浏览器抓取相关枚举与表
