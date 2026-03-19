@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS rigel_part_market_summary (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     part_id UUID NOT NULL REFERENCES rigel_parts(id) ON DELETE CASCADE,
     source_platform source_platform NOT NULL,
+    snapshot_date DATE NOT NULL,
     latest_price NUMERIC(12,2),
     min_price NUMERIC(12,2),
     max_price NUMERIC(12,2),
@@ -136,15 +137,16 @@ CREATE TABLE IF NOT EXISTS rigel_part_market_summary (
     p25_price NUMERIC(12,2),
     p75_price NUMERIC(12,2),
     sample_count INT NOT NULL DEFAULT 0,
-    window_days INT NOT NULL DEFAULT 1,
     last_collected_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (part_id, source_platform, window_days)
+    UNIQUE (part_id, source_platform, snapshot_date)
 );
 
 CREATE INDEX IF NOT EXISTS idx_rigel_part_market_summary_platform
     ON rigel_part_market_summary(source_platform);
+CREATE INDEX IF NOT EXISTS idx_rigel_part_market_summary_snapshot_date
+    ON rigel_part_market_summary(snapshot_date DESC);
 
 CREATE TABLE IF NOT EXISTS rigel_jobs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

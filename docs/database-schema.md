@@ -129,14 +129,15 @@
 
 用途：
 
-- 形成型号级价格清单
-- 为 AI 提供 `price_catalog`
+- 保存按天生成的型号级价格快照
+- 为 AI 提供每日 `price_catalog`
 
 当前字段：
 
 - `id`
 - `part_id`
 - `source_platform`
+- `snapshot_date`
 - `sample_count`
 - `latest_price`
 - `median_price`
@@ -144,7 +145,6 @@
 - `p75_price`
 - `min_price`
 - `max_price`
-- `window_days`
 - `last_collected_at`
 - `created_at`
 - `updated_at`
@@ -174,15 +174,18 @@
 ## 当前模块与表的职责归属
 
 - `rigel-jd-collector`
+  - `rigel_keyword_seeds` 的消费
   - `rigel_products`
   - `rigel_price_snapshots`
+  - `rigel_parts`
+  - `rigel_product_part_mapping`
+  - `rigel_part_market_summary`
   - `rigel_jobs`
 
 - `rigel-build-engine`
-  - `rigel_parts`
-  - `rigel_keyword_seeds` 的消费与映射预留
-  - `rigel_product_part_mapping`
-  - `rigel_part_market_summary`
+  - `rigel_parts` 的消费
+  - `rigel_product_part_mapping` 的消费
+  - `rigel_part_market_summary` 的消费与按需补写
 
 - `rigel-console`
   - 页面管理和服务调用
@@ -197,7 +200,7 @@
 2. 能存原始商品
 3. 能存价格快照
 4. 能形成标准型号实体与映射
-5. 能产出型号级价格清单
+5. 能按天产出型号级价格快照
 6. 能为未来返佣链接预留原始 payload
 
 ## 当前不作为重点的旧设计

@@ -52,6 +52,18 @@
 - `GET /api/v1/products`
   - 查询已采集的原始商品
 
+### 当前内置调度能力
+
+- 按配置时间每日执行采集
+- 按配置的请求间隔逐个关键词请求京东联盟接口
+- 在采集后写入：
+  - `rigel_products`
+  - `rigel_price_snapshots`
+  - `rigel_parts`
+  - `rigel_product_part_mapping`
+  - `rigel_part_market_summary`
+  - `rigel_jobs`
+
 ### 请求示例
 
 ```bash
