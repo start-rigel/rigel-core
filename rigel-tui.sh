@@ -104,6 +104,9 @@ init_service_flags() {
 
 collect_selected_services() {
   SELECTED_SERVICES=()
+  if [[ "${#SERVICE_FLAGS[@]}" -eq 0 ]]; then
+    return 0
+  fi
   local i
   for ((i = 0; i < ${#SERVICES[@]}; i++)); do
     if [[ "${SERVICE_FLAGS[$i]}" == "1" ]]; then
@@ -204,13 +207,28 @@ render_services_step() {
   render_footer "空格切换服务"
 }
 
+resolve_command_key() {
+  local action_key="$1"
+  case "${action_key}" in
+    up-all)
+      printf 'up'
+      ;;
+    down-all)
+      printf 'down'
+      ;;
+    *)
+      printf '%s' "${action_key}"
+      ;;
+  esac
+}
+
 render_confirm_step() {
   collect_selected_services
   parse_action "${ACTION_INDEX}"
   local options=("执行" "返回上一步" "退出")
   draw_text 4 1 "第 3/3 步"
   draw_text 5 1 "确认后将直接执行命令"
-  local cmd="./rigel.sh ${ACTION_KEY}"
+  local cmd="./rigel.sh $(resolve_command_key "${ACTION_KEY}")"
   if [[ "${#SELECTED_SERVICES[@]}" -gt 0 ]]; then
     cmd+=" $(printf '%s ' "${SELECTED_SERVICES[@]}")"
   fi
@@ -260,12 +278,8 @@ execute_command() {
   collect_selected_services
   parse_action "${ACTION_INDEX}"
   clear
-  local command_key="${ACTION_KEY}"
-  if [[ "${ACTION_KEY}" == "up-all" ]]; then
-    command_key="up"
-  elif [[ "${ACTION_KEY}" == "down-all" ]]; then
-    command_key="down"
-  fi
+  local command_key
+  command_key="$(resolve_command_key "${ACTION_KEY}")"
   local cmd=("${CLI_SCRIPT}" "${command_key}")
   if [[ "${ACTION_NEEDS_SERVICES}" == "1" ]]; then
     cmd+=("${SELECTED_SERVICES[@]}")
