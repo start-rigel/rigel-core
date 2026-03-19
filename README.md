@@ -217,6 +217,14 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 ./rigel.sh down
 ```
 
+## 近期部署约束（2026-03）
+
+- `rigel-build-engine` 不再映射宿主机端口，仅在 Docker 内部网络提供服务。
+- 后台系统设置接口新增内部鉴权头：
+  - 请求头：`X-Rigel-Admin-Token`
+  - 环境变量：`RIGEL_BUILD_ENGINE_ADMIN_TOKEN`
+- console 通过内部网络访问 build-engine：`http://rigel-build-engine:18082`
+
 前端界面更新快捷命令：
 
 ```bash
@@ -248,5 +256,4 @@ go run ./cmd/server -config ./configs/config.yaml
 健康检查：
 
 - `http://localhost:18081/healthz`
-- `http://localhost:18082/healthz`
 - `http://localhost:18084/healthz`

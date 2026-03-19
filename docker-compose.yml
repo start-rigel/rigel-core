@@ -51,14 +51,12 @@ services:
     environment:
       RIGEL_SERVICE_NAME: rigel-build-engine
       RIGEL_HTTP_PORT: ${RIGEL_BUILD_ENGINE_PORT}
+      RIGEL_BUILD_ENGINE_ADMIN_TOKEN: ${RIGEL_BUILD_ENGINE_ADMIN_TOKEN}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "${RIGEL_BUILD_ENGINE_PORT}:${RIGEL_BUILD_ENGINE_PORT}"
-
   rigel-console:
     build:
       context: ../rigel-console
