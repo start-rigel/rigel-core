@@ -39,7 +39,8 @@ Rigel 当前是一个围绕价格清单和 AI 推荐工作的最小系统。
 - 接收用户需求参数
 - 整理原始硬件信息
 - 形成型号级价格清单
-- 构造 AI 输入
+- 接收 `console` 传入的顶层用户字段 + `catalog.items`
+- 在内部转换为 `user_request + price_catalog`
 - 请求 AI API
 - 返回结构化推荐结果
 

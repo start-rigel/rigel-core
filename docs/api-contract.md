@@ -214,7 +214,7 @@ curl -X POST http://localhost:18084/api/v1/keyword-seeds/import \
 }
 ```
 
-## 6. build-engine 推荐请求
+## 6. console -> build-engine 推荐请求
 
 ### 请求体
 
@@ -248,10 +248,62 @@ curl -X POST http://localhost:18084/api/v1/keyword-seeds/import \
 
 说明：
 
-- 当前 build-engine 的 `POST /api/v1/advice/catalog` 直接接收 `budget`、`use_case`、`build_mode` 和整份 `catalog`
-- 不是旧版 `user_request + price_catalog` 二层结构
+- 当前 build-engine 的 `POST /api/v1/advice/catalog` 对外直接接收 `budget`、`use_case`、`build_mode` 和整份 `catalog`
+- 这里定义的是服务 HTTP 契约，不是最终发给 AI 的 payload
 
-## 7. build-engine 推荐响应
+## 7. build-engine -> AI 最终 payload
+
+### 请求体
+
+```json
+{
+  "user_request": {
+    "budget": 6000,
+    "use_case": "gaming",
+    "build_mode": "mixed",
+    "brand_preference": {
+      "cpu": "amd",
+      "gpu": "nvidia"
+    },
+    "special_requirements": [
+      "wifi_motherboard"
+    ],
+    "notes": "1080p游戏为主"
+  },
+  "price_catalog": {
+    "cpu": [
+      {
+        "model": "7500f",
+        "display_name": "AMD 7500f",
+        "avg_price": 899,
+        "median_price": 899,
+        "min_price": 859,
+        "max_price": 939,
+        "sample_count": 3
+      }
+    ],
+    "gpu": [
+      {
+        "model": "rtx 4060",
+        "display_name": "NVIDIA rtx 4060",
+        "avg_price": 2399,
+        "median_price": 2399,
+        "min_price": 2299,
+        "max_price": 2499,
+        "sample_count": 4
+      }
+    ]
+  }
+}
+```
+
+说明：
+
+- `build-engine` 对外接口继续使用顶层用户字段 + `catalog.items`
+- 真正发给 AI 前，`build-engine` 必须先把 catalog 重组为按类别分组的 `price_catalog`
+- 这一层才是 AI 协议真源
+
+## 8. build-engine 推荐响应
 
 ### 响应体
 

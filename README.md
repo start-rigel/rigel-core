@@ -65,6 +65,8 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 
 - 接收来自界面的用户参数
 - 整理型号级价格清单
+- 对外 HTTP 接口接收顶层用户字段 + `catalog.items`
+- 对内统一转换为 `user_request + price_catalog` 后再请求 AI
 - 组装 AI 输入并请求 AI API
 - 返回结构化推荐结果
 
