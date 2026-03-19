@@ -188,6 +188,11 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 - `b` 返回上一步
 - `q` 退出
 
+首页提供单独菜单项：
+
+- `一键启动全部服务`
+- `一键停止全部服务`
+
 常用命令：
 
 ```bash
@@ -197,22 +202,6 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 ./scripts/rigel.sh restart rigel-build-engine
 ./scripts/rigel.sh down
 ```
-
-macOS 图形化入口：
-
-```bash
-./scripts/rigel-gui.command
-```
-
-也可以在 Finder 中双击 `scripts/rigel-gui.command`，通过弹窗选择：
-
-- `up`
-- `start`
-- `restart`
-- `build`
-- `logs`
-- `ps`
-- `down`
 
 脚本默认管理当前激活服务：
 

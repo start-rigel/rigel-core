@@ -7,6 +7,8 @@ CORE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CLI_SCRIPT="${SCRIPT_DIR}/rigel.sh"
 
 ACTIONS=(
+  "up-all|一键启动全部服务|直接构建并启动当前全部激活服务|0"
+  "down-all|一键停止全部服务|直接停止当前全部激活服务|0"
   "up|打包并启动服务|执行 docker compose up -d --build|1"
   "start|启动已构建服务|执行 docker compose up -d|1"
   "restart|重建并重启服务|对选中服务重新构建并启动|1"
@@ -258,7 +260,13 @@ execute_command() {
   collect_selected_services
   parse_action "${ACTION_INDEX}"
   clear
-  local cmd=("${CLI_SCRIPT}" "${ACTION_KEY}")
+  local command_key="${ACTION_KEY}"
+  if [[ "${ACTION_KEY}" == "up-all" ]]; then
+    command_key="up"
+  elif [[ "${ACTION_KEY}" == "down-all" ]]; then
+    command_key="down"
+  fi
+  local cmd=("${CLI_SCRIPT}" "${command_key}")
   if [[ "${ACTION_NEEDS_SERVICES}" == "1" ]]; then
     cmd+=("${SELECTED_SERVICES[@]}")
   fi
