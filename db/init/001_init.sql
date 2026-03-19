@@ -148,6 +148,20 @@ CREATE INDEX IF NOT EXISTS idx_rigel_part_market_summary_platform
 CREATE INDEX IF NOT EXISTS idx_rigel_part_market_summary_snapshot_date
     ON rigel_part_market_summary(snapshot_date DESC);
 
+CREATE TABLE IF NOT EXISTS rigel_collector_schedules (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    service_name TEXT NOT NULL UNIQUE,
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    schedule_time TEXT NOT NULL,
+    request_interval_seconds INT NOT NULL DEFAULT 0,
+    query_limit INT NOT NULL DEFAULT 5,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_rigel_collector_schedules_enabled
+    ON rigel_collector_schedules(enabled);
+
 CREATE TABLE IF NOT EXISTS rigel_jobs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     job_type job_type NOT NULL,

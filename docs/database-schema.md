@@ -171,10 +171,30 @@
 - `created_at`
 - `updated_at`
 
+### 8. `rigel_collector_schedules`
+
+用途：
+
+- 保存采集服务的后台调度配置
+- 控制定时采集是否启用
+- 控制每日执行时间、请求间隔和查询条数
+
+当前字段：
+
+- `id`
+- `service_name`
+- `enabled`
+- `schedule_time`
+- `request_interval_seconds`
+- `query_limit`
+- `created_at`
+- `updated_at`
+
 ## 当前模块与表的职责归属
 
 - `rigel-jd-collector`
   - `rigel_keyword_seeds` 的消费
+  - `rigel_collector_schedules`
   - `rigel_products`
   - `rigel_price_snapshots`
   - `rigel_parts`

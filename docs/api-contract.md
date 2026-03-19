@@ -137,7 +137,55 @@ curl -X POST http://localhost:18084/admin/api/v1/keyword-seeds/import \
 }
 ```
 
-## 5. console 推荐请求
+## 5. JD 定时采集配置接口
+
+建议接口：
+
+- `GET /admin/api/v1/jd/schedule`
+- `PUT /admin/api/v1/jd/schedule`
+
+### 读取响应示例
+
+```json
+{
+  "configured": true,
+  "config": {
+    "id": "cfg-1",
+    "service_name": "rigel-jd-collector",
+    "enabled": true,
+    "schedule_time": "03:00",
+    "request_interval_seconds": 3,
+    "query_limit": 5
+  }
+}
+```
+
+### 更新请求体
+
+```json
+{
+  "enabled": true,
+  "schedule_time": "03:00",
+  "request_interval_seconds": 3,
+  "query_limit": 5
+}
+```
+
+### 字段说明
+
+| 字段 | 必填 | 说明 |
+|---|---|---|
+| `enabled` | 是 | 是否启用定时采集 |
+| `schedule_time` | 是 | 每日执行时间，格式 `HH:MM` |
+| `request_interval_seconds` | 是 | 每次关键词请求的间隔秒数 |
+| `query_limit` | 是 | 每次关键词查询的商品条数 |
+
+规则：
+
+- 没有配置时，jd-collector 不启动定时采集
+- 配置存在但 `enabled=false` 时，jd-collector 不启动定时采集
+
+## 6. console 推荐请求
 
 建议接口：
 
@@ -214,7 +262,7 @@ curl -X POST http://localhost:18084/admin/api/v1/keyword-seeds/import \
 }
 ```
 
-## 6. console -> build-engine 推荐请求
+## 7. console -> build-engine 推荐请求
 
 ### 请求体
 
@@ -251,7 +299,7 @@ curl -X POST http://localhost:18084/admin/api/v1/keyword-seeds/import \
 - 当前 build-engine 的 `POST /api/v1/advice/catalog` 对外直接接收 `budget`、`use_case`、`build_mode` 和整份 `catalog`
 - 这里定义的是服务 HTTP 契约，不是最终发给 AI 的 payload
 
-## 7. build-engine -> AI 最终 payload
+## 8. build-engine -> AI 最终 payload
 
 ### 请求体
 

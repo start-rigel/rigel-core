@@ -46,6 +46,12 @@
 - `GET /healthz`
   - 健康检查
 
+- `GET /api/v1/admin/schedule`
+  - 读取当前 JD 定时采集配置
+
+- `PUT /api/v1/admin/schedule`
+  - 更新当前 JD 定时采集配置
+
 - `POST /api/v1/collect/search`
   - 按关键词触发一次采集
 
@@ -54,8 +60,10 @@
 
 ### 当前内置调度能力
 
-- 按配置时间每日执行采集
-- 按配置的请求间隔逐个关键词请求京东联盟接口
+- 没有调度配置时，不启动定时采集
+- 配置存在但 `enabled=false` 时，不启动定时采集
+- 按后台配置的每日时间执行采集
+- 按后台配置的请求间隔逐个关键词请求京东联盟接口
 - 在采集后写入：
   - `rigel_products`
   - `rigel_price_snapshots`
@@ -68,6 +76,15 @@
 
 ```bash
 curl http://localhost:18081/healthz
+curl http://localhost:18081/api/v1/admin/schedule
+curl -X PUT http://localhost:18081/api/v1/admin/schedule \
+  -H "Content-Type: application/json" \
+  -d '{
+    "enabled": true,
+    "schedule_time": "03:00",
+    "request_interval_seconds": 3,
+    "query_limit": 5
+  }'
 curl -X POST http://localhost:18081/api/v1/collect/search \
   -H "Content-Type: application/json" \
   -d '{
@@ -148,6 +165,12 @@ curl -X POST http://localhost:18082/api/v1/advice/catalog \
 
 - `POST /admin/logout`
   - 退出后台登录态
+
+- `GET /admin/api/v1/jd/schedule`
+  - 获取 JD 定时采集配置
+
+- `PUT /admin/api/v1/jd/schedule`
+  - 更新 JD 定时采集配置
 
 ### 请求示例
 
@@ -246,6 +269,9 @@ curl -X POST http://localhost:18084/admin/login \
 - `GET /admin/keywords/import`
   - Excel 导入页
 
+- `GET /admin/jd-schedule`
+  - JD 定时采集配置页
+
 ### 当前必须提供的词库 API
 
 - `GET /admin/api/v1/keyword-seeds`
@@ -275,6 +301,12 @@ curl -X POST http://localhost:18084/admin/login \
 - `GET /admin/api/v1/keyword-seeds/export`
   - 导出词库 Excel
 
+- `GET /admin/api/v1/jd/schedule`
+  - 获取 JD 定时采集配置
+
+- `PUT /admin/api/v1/jd/schedule`
+  - 更新 JD 定时采集配置
+
 ## 页面与 console 接口对应
 
 | 页面 | 读取接口 | 操作接口 |
@@ -285,6 +317,7 @@ curl -X POST http://localhost:18084/admin/login \
 | `/admin/keywords/new` | 无 | `POST /admin/api/v1/keyword-seeds` |
 | `/admin/keywords/{id}/edit` | `GET /admin/api/v1/keyword-seeds/{id}` | `PUT /admin/api/v1/keyword-seeds/{id}` |
 | `/admin/keywords/import` | 无 | `POST /admin/api/v1/keyword-seeds/import` `GET /admin/api/v1/keyword-seeds/template` |
+| `/admin/jd-schedule` | `GET /admin/api/v1/jd/schedule` | `PUT /admin/api/v1/jd/schedule` |
 
 ## 当前返回示例摘要
 
