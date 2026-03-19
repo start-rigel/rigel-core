@@ -182,3 +182,30 @@ CREATE INDEX IF NOT EXISTS idx_rigel_jobs_status_type
     ON rigel_jobs(status, job_type);
 CREATE INDEX IF NOT EXISTS idx_rigel_jobs_scheduled_at
     ON rigel_jobs(scheduled_at);
+
+CREATE TABLE IF NOT EXISTS rigel_system_settings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    setting_key TEXT NOT NULL UNIQUE,
+    value_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO rigel_system_settings (setting_key, value_json)
+VALUES
+    (
+        'catalog_ai_limits',
+        jsonb_build_object('max_models_per_category', 5)
+    ),
+    (
+        'ai_runtime',
+        jsonb_build_object(
+            'base_url', '',
+            'gateway_token', '',
+            'api_token', '',
+            'model', 'openai/gpt-5.4-nano',
+            'timeout_seconds', 25,
+            'enabled', true
+        )
+    )
+ON CONFLICT (setting_key) DO NOTHING;
