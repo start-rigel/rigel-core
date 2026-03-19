@@ -55,6 +55,13 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 - 前台用户页面与后台管理页面必须分离
 - 后台管理页面必须登录后访问
 
+当前安全边界要求：
+
+- 默认只有 `rigel-console` 作为公网入口
+- `rigel-build-engine` 与 `rigel-jd-collector` 按内网服务设计
+- `console -> build-engine` 默认走内部服务 token 鉴权
+- 后台 `/admin` 默认只允许私网 / VPN 来源访问
+
 ## 当前范围
 
 当前只保留 3 个激活业务模块：
