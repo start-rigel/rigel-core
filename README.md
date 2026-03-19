@@ -174,6 +174,20 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 ./scripts/rigel.sh up
 ```
 
+终端交互模式：
+
+```bash
+./scripts/rigel-tui.py
+```
+
+支持：
+
+- 方向键 / `j` `k` 移动
+- `Space` 选择服务
+- `Enter` 确认
+- `b` 返回上一步
+- `q` 退出
+
 常用命令：
 
 ```bash
