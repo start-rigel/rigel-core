@@ -43,11 +43,14 @@
 
 - `budget`
 - `use_case`
+- `notes`
+
+首页第一版隐藏但仍由后端默认补齐的字段：
+
 - `build_mode`
 - `brand_preference.cpu`
 - `brand_preference.gpu`
 - `special_requirements`
-- `notes`
 
 提交接口：
 
@@ -68,7 +71,7 @@
 
 1. 用户打开首页，页面先调用 `GET /api/v1/session/anonymous`
 2. 用户输入 `budget=6000`、`use_case=gaming`
-3. 用户选择 `cpu=amd`、`gpu=nvidia`
+3. 用户按需填写补充说明
 4. 页面调用 `POST /catalog/recommend`
 5. 若命中缓存则直接展示结果
 6. 若进入短冷却则提示稍后再试
@@ -81,11 +84,6 @@
   "budget": 6000,
   "use_case": "gaming",
   "build_mode": "mixed",
-  "brand_preference": {
-    "cpu": "amd",
-    "gpu": "nvidia"
-  },
-  "special_requirements": ["wifi_motherboard"],
   "notes": "1080p 游戏为主"
 }
 ```
