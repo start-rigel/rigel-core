@@ -14,6 +14,9 @@ SERVICES=(
   rigel-console
 )
 
+ACTION_HINT=$'可用动作:\nup\nstart\nrestart\nbuild\nlogs\nps\ndown'
+SERVICE_HINT=$'可用服务:\npostgres\nredis\nrigel-jd-collector\nrigel-build-engine\nrigel-console\n\n多个服务用英文逗号分隔。'
+
 require_tool() {
   if ! command -v "$1" >/dev/null 2>&1; then
     osascript -e "display alert \"Missing Command\" message \"Required command not found: $1\" as critical"
@@ -28,75 +31,77 @@ if [[ ! -x "${CLI_SCRIPT}" ]]; then
   exit 1
 fi
 
-join_lines() {
-  local IFS=$'\n'
-  printf '%s' "$*"
+show_error() {
+  osascript -e "display alert \"Rigel GUI\" message \"$1\" as critical"
 }
 
-pick_action() {
-  osascript <<'APPLESCRIPT'
-set actionList to {"up", "start", "restart", "build", "logs", "ps", "down"}
-set chosenAction to choose from list actionList with prompt "选择 Rigel 操作" default items {"up"} OK button name "继续" cancel button name "取消" without multiple selections allowed and empty selection allowed false
-if chosenAction is false then
-	return ""
-end if
-return item 1 of chosenAction
+prompt_value() {
+  local prompt_message="$1"
+  local default_answer="$2"
+
+  PROMPT_MESSAGE="${prompt_message}" DEFAULT_ANSWER="${default_answer}" osascript <<'APPLESCRIPT'
+set promptMessage to system attribute "PROMPT_MESSAGE"
+set defaultAnswer to system attribute "DEFAULT_ANSWER"
+set resultRecord to display dialog promptMessage default answer defaultAnswer buttons {"取消", "确定"} default button "确定"
+return text returned of resultRecord
 APPLESCRIPT
 }
 
-pick_services() {
-  local default_item="$1"
-  local service_lines
-  service_lines="$(join_lines "${SERVICES[@]}")"
-  SERVICE_LINES="${service_lines}" DEFAULT_ITEM="${default_item}" osascript <<'APPLESCRIPT'
-set serviceText to system attribute "SERVICE_LINES"
-set defaultItem to system attribute "DEFAULT_ITEM"
-set AppleScript's text item delimiters to linefeed
-set serviceList to text items of serviceText
-set AppleScript's text item delimiters to ""
-
-if defaultItem is "" then
-	set defaultItems to {}
-else
-	set defaultItems to {defaultItem}
-end if
-
-set chosenServices to choose from list serviceList with prompt "选择要操作的服务，可多选" default items defaultItems OK button name "执行" cancel button name "取消" with multiple selections allowed and empty selection allowed false
-if chosenServices is false then
-	return ""
-end if
-
-set AppleScript's text item delimiters to linefeed
-set joinedItems to chosenServices as text
-set AppleScript's text item delimiters to ""
-return joinedItems
-APPLESCRIPT
+trim() {
+  local value="$1"
+  value="${value#"${value%%[![:space:]]*}"}"
+  value="${value%"${value##*[![:space:]]}"}"
+  printf '%s' "${value}"
 }
 
-action="$(pick_action)"
-if [[ -z "${action}" ]]; then
-  exit 0
-fi
+action="$(prompt_value "${ACTION_HINT}" "up" || true)"
+action="$(trim "${action}")"
+
+case "${action}" in
+  up|start|restart|build|logs|ps|down)
+    ;;
+  "")
+    exit 0
+    ;;
+  *)
+    show_error "无效动作: ${action}"
+    exit 1
+    ;;
+esac
 
 services=()
 case "${action}" in
   up|start|restart|build)
-    picked="$(pick_services "rigel-console")"
+    picked="$(prompt_value "${SERVICE_HINT}" "postgres,redis,rigel-jd-collector,rigel-build-engine,rigel-console" || true)"
     [[ -z "${picked}" ]] && exit 0
-    while IFS= read -r line; do
-      [[ -n "${line}" ]] && services+=("${line}")
-    done <<< "${picked}"
+    IFS=',' read -r -a raw_services <<< "${picked}"
+    for raw_service in "${raw_services[@]}"; do
+      service="$(trim "${raw_service}")"
+      [[ -n "${service}" ]] && services+=("${service}")
+    done
     ;;
   logs)
-    picked="$(pick_services "rigel-console")"
+    picked="$(prompt_value "${SERVICE_HINT}" "rigel-console" || true)"
     [[ -z "${picked}" ]] && exit 0
-    while IFS= read -r line; do
-      [[ -n "${line}" ]] && services+=("${line}")
-    done <<< "${picked}"
+    IFS=',' read -r -a raw_services <<< "${picked}"
+    for raw_service in "${raw_services[@]}"; do
+      service="$(trim "${raw_service}")"
+      [[ -n "${service}" ]] && services+=("${service}")
+    done
     ;;
   ps|down)
     ;;
 esac
+
+if [[ "${#services[@]}" -gt 0 ]]; then
+  valid_services=(" ${SERVICES[*]} ")
+  for service in "${services[@]}"; do
+    if [[ ! " ${SERVICES[*]} " =~ [[:space:]]${service}[[:space:]] ]]; then
+      show_error "无效服务: ${service}"
+      exit 1
+    fi
+  done
+fi
 
 command_parts=("${CLI_SCRIPT}" "${action}")
 if [[ "${#services[@]}" -gt 0 ]]; then
