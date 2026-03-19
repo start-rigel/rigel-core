@@ -61,6 +61,8 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 - `rigel-build-engine` 与 `rigel-jd-collector` 按内网服务设计
 - `console -> build-engine` 默认走内部服务 token 鉴权
 - 后台 `/admin` 默认只允许私网 / VPN 来源访问
+- 后台登录态必须使用服务端 session，修改类接口默认要求 CSRF 校验
+- 词库管理必须以 PostgreSQL `rigel_keyword_seeds` 为真源
 
 ## 当前范围
 
