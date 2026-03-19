@@ -170,14 +170,32 @@ rigel/
 ## 如何启动
 
 ```bash
-cd /home/life/work/rigle/rigel-core
-docker compose up --build
+cd /Users/mac-mini/work/private/rigel/rigel-core
+./scripts/rigel.sh up
 ```
+
+常用命令：
+
+```bash
+./scripts/rigel.sh up
+./scripts/rigel.sh ps
+./scripts/rigel.sh logs rigel-console
+./scripts/rigel.sh restart rigel-build-engine
+./scripts/rigel.sh down
+```
+
+脚本默认管理当前激活服务：
+
+- `postgres`
+- `redis`
+- `rigel-jd-collector`
+- `rigel-build-engine`
+- `rigel-console`
 
 如果需要单独指定配置文件路径，可在容器外直接运行：
 
 ```bash
-cd /home/life/work/rigle/rigel-jd-collector
+cd /Users/mac-mini/work/private/rigel/rigel-jd-collector
 go run ./cmd/server -config ./configs/config.yaml
 ```
 
