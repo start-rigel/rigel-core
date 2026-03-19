@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## AI 开发守则
+
+1. 默认只有 `rigel-console` 是公网入口；`rigel-build-engine` 与 `rigel-jd-collector` 按内网服务设计。
+2. `console -> build-engine` 的高成本内部调用默认必须走服务 token，例如 `X-Rigel-Service-Token`。
+3. `/admin` 与后台 API 默认按私网 / VPN 可访问设计；不要为了联调方便移除来源限制。
+4. 匿名推荐链路默认必须保留：请求归一化、缓存判定、`IP + anonymous_id + device_fingerprint` 联合风控、冷却或挑战升级。
+5. 只要改动了公网暴露面、鉴权方式、限流维度、挑战机制、后台访问边界或 AI 调用路径，必须同步更新共享文档和模块文档。
+
 ## 项目
 Rigel 是一个基于京东硬件价格数据与 AI 分析的电脑配置推荐系统。
 
