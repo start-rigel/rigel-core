@@ -177,7 +177,7 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 终端交互模式：
 
 ```bash
-./scripts/rigel-tui.py
+./scripts/rigel-tui.sh
 ```
 
 支持：
