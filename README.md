@@ -223,6 +223,7 @@ cd /Users/mac-mini/work/private/rigel/rigel-core
 - 后台系统设置接口新增内部鉴权头：
   - 请求头：`X-Rigel-Admin-Token`
   - 环境变量：`RIGEL_BUILD_ENGINE_ADMIN_TOKEN`
+  - token 约束：至少 24 位，必须通过密钥管理或环境变量注入，禁止默认值
 - console 通过内部网络访问 build-engine：`http://rigel-build-engine:18082`
 
 前端界面更新快捷命令：
