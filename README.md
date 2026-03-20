@@ -145,6 +145,12 @@ Rigel 当前是一个最小可用的电脑配置推荐系统。
 - 页面清单：`docs/pages.md`
 - 后端接口清单：`docs/backend-apis.md`
 
+## 数据库迁移说明
+
+- `db/init/001_init.sql` 只在数据库首次初始化时自动执行。
+- 对已运行环境，结构调整需要新增增量脚本并手动执行。
+- 当前新增了 `db/init/003_migrate_part_market_summary_snapshot.sql`，用于把旧版 `rigel_part_market_summary` 迁移到 `snapshot_date` 维度。
+
 ## Workspace Layout
 
 ```text
