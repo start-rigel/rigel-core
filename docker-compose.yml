@@ -52,6 +52,7 @@ services:
       RIGEL_SERVICE_NAME: rigel-build-engine
       RIGEL_HTTP_PORT: ${RIGEL_BUILD_ENGINE_PORT}
       RIGEL_BUILD_ENGINE_ADMIN_TOKEN: ${RIGEL_BUILD_ENGINE_ADMIN_TOKEN}
+      RIGEL_INTERNAL_SERVICE_TOKEN: ${RIGEL_INTERNAL_SERVICE_TOKEN}
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,6 +66,7 @@ services:
     environment:
       RIGEL_SERVICE_NAME: rigel-console
       RIGEL_HTTP_PORT: ${RIGEL_CONSOLE_PORT}
+      RIGEL_INTERNAL_SERVICE_TOKEN: ${RIGEL_INTERNAL_SERVICE_TOKEN}
     depends_on:
       rigel-build-engine:
         condition: service_started
